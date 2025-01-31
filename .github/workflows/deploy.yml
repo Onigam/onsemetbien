@@ -23,7 +23,7 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Link to Railway Project
-        run: railway init --project ${{ secrets.RAILWAY_PROJECT_ID }}
+        run: railway init --name delightful-delight
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 

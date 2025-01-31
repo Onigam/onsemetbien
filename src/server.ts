@@ -155,6 +155,10 @@ io.on('connection', async (socket) => {
 
 app.use(express.static('public'));
 
+app.get('/health', (req, res) => {
+  res.send('OK');
+});
+
 const PORT = process.env.PORT || 8080;
 
 connectToDatabase().then(() => {

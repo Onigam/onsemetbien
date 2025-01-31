@@ -21,5 +21,8 @@ COPY . .
 # Build TypeScript
 RUN npm run build
 
+# Expose the port
+EXPOSE 8080
+
 # Start the server
 CMD ["npm", "start"] 

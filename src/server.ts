@@ -155,7 +155,7 @@ io.on('connection', async (socket) => {
 
 app.use(express.static('public'));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 connectToDatabase().then(() => {
   httpServer.listen(PORT, () => {

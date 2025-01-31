@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Web Radio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #player-info {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #audio-player {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="player-info">
+        <h2 id="now-playing">Loading...</h2>
+        <p id="listeners">Listeners: 0</p>
+    </div>
+    <audio id="audio-player" controls autoplay></audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const audioPlayer = document.getElementById('audio-player');
+        const nowPlaying = document.getElementById('now-playing');
+        const listenersElement = document.getElementById('listeners');
+
+        socket.on('trackChange', (track) => {
+            nowPlaying.textContent = track.title;
+            audioPlayer.src = track.url;
+            if (document.body.classList.contains('user-interacted')) {
+                audioPlayer.play().catch(error => {
+                    console.log('Playback failed:', error);
+                });
+            }
+        });
+
+        document.body.addEventListener('click', () => {
+            document.body.classList.add('user-interacted');
+            if (audioPlayer.src && audioPlayer.paused) {
+                audioPlayer.play().catch(error => {
+                    console.log('Playback failed:', error);
+                });
+            }
+        });
+
+        socket.on('listenersUpdate', (count) => {
+            listenersElement.textContent = `Listeners: ${count}`;
+        });
+    </script>
+</body>
+
+</html>

@@ -2,6 +2,10 @@
 
 A TypeScript-based web radio system for "On se met bien", a French web radio station. This project handles music management, cloud storage, and live streaming with automatic track scheduling.
 
+![On se met bien Screenshot](public/screenshot.png)
+
+Visit our website: [On se met bien](https://www.onsemetbien.net/)
+
 ## Features
 
 - 🎵 Music Library Management

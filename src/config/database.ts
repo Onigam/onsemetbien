@@ -5,10 +5,7 @@ export async function connectToDatabase() {
     const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/webradio';
     console.log('Connecting to MongoDB:', uri);
     await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/webradio',
-      {
-        directConnection: true,
-      }
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/webradio'
     );
     console.log('Connected to MongoDB');
   } catch (error) {

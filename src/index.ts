@@ -40,6 +40,16 @@ async function downloadYoutubeVideo(url: string, trackType: string) {
   }
 
   try {
+    // Check if track already exists
+    const existingTrack = await TrackModel.findOne({ sourceUrl: url });
+    if (existingTrack) {
+      console.error(
+        'A track with this YouTube URL already exists in the database'
+      );
+      await mongoose.connection.close();
+      process.exit(1);
+    }
+
     console.log('Starting download...');
 
     // Get video info first
@@ -74,6 +84,7 @@ async function downloadYoutubeVideo(url: string, trackType: string) {
       url: fileName,
       duration: info.duration,
       type: trackType,
+      sourceUrl: url,
     });
 
     // Clean up local file

@@ -9,4 +9,5 @@ export interface Track {
   duration?: number;
   createdAt: Date;
   type: TrackType;
+  sourceUrl?: string;
 }

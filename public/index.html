@@ -39,11 +39,26 @@
         socket.on('trackChange', (track) => {
             nowPlaying.textContent = track.title;
             audioPlayer.src = track.url;
+
+            if (track.currentPosition) {
+                // For new connections, set the current position
+                audioPlayer.currentTime = track.currentPosition;
+            } else {
+                // For track changes, start from beginning
+                audioPlayer.currentTime = 0;
+            }
+
             if (document.body.classList.contains('user-interacted')) {
                 audioPlayer.play().catch(error => {
                     console.log('Playback failed:', error);
                 });
             }
+        });
+
+        // Prevent seeking in the audio player to maintain sync
+        audioPlayer.addEventListener('seeked', (event) => {
+            event.preventDefault();
+            return false;
         });
 
         document.body.addEventListener('click', () => {

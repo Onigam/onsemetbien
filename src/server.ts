@@ -29,6 +29,7 @@ let currentTrack: any = null;
 let listeners = 0;
 let playedTracks: Set<string> = new Set(); // Keep track of played tracks by ID
 let lastPlayedType: TrackType | null = null; // Keep track of last played type
+let currentTrackStartTime: number = Date.now(); // Add this line to track when the current track started
 
 async function getSignedS3Url(key: string) {
   // Remove any full URL if it exists, we just want the filename
@@ -112,21 +113,20 @@ async function playNextTrack() {
 
   if (nextTrack) {
     currentTrack = nextTrack;
-    // Generate signed URL for the track
+    currentTrackStartTime = Date.now(); // Update the start time when playing a new track
     const signedUrl = await getSignedS3Url(currentTrack.url);
 
     io.emit('trackChange', {
       title: currentTrack.title,
       url: signedUrl,
-      type: currentTrack.type, // Add type to the emitted data
+      type: currentTrack.type,
+      startTime: currentTrackStartTime, // Add start time to the emitted data
     });
 
     console.log('Playing track:', currentTrack.title);
 
-    // Schedule next track
     setTimeout(playNextTrack, (currentTrack.duration || 300) * 1000);
   } else {
-    // If we failed to get a track, try again in 5 seconds
     console.log('No track available, retrying in 5 seconds...');
     setTimeout(playNextTrack, 5000);
   }
@@ -137,13 +137,15 @@ io.on('connection', async (socket) => {
   io.emit('listenersUpdate', listeners);
 
   if (currentTrack) {
-    // Generate new signed URL for new connections
     const signedUrl = await getSignedS3Url(currentTrack.url);
+    const currentPosition = (Date.now() - currentTrackStartTime) / 1000; // Calculate current position in seconds
 
     socket.emit('trackChange', {
       title: currentTrack.title,
       url: signedUrl,
-      type: currentTrack.type, // Add type to the emitted data
+      type: currentTrack.type,
+      startTime: currentTrackStartTime,
+      currentPosition: currentPosition, // Add current position for new connections
     });
   }
 

@@ -79,6 +79,18 @@ async function getNextTrack() {
       if (differentTypeCount > 0) {
         query.type = { $ne: lastPlayedType };
       }
+
+      // Ensure the next track is a music if the last played type is not music
+      if (lastPlayedType !== 'music') {
+        const musicCount = await TrackModel.countDocuments({
+          ...query,
+          type: 'music',
+        });
+
+        if (musicCount > 0) {
+          query.type = 'music';
+        }
+      }
     }
 
     // Get count of available tracks

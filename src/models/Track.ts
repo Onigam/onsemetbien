@@ -9,6 +9,7 @@ const trackSchema = new mongoose.Schema<Track>({
   createdAt: { type: Date, default: Date.now },
   type: { type: String, enum: VALID_TRACK_TYPES, required: true },
   sourceUrl: { type: String },
+  hidden: { type: Boolean, default: false },
 });
 
 export const TrackModel = mongoose.model<Track>('Track', trackSchema);

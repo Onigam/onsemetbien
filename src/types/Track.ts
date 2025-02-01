@@ -10,4 +10,5 @@ export interface Track {
   createdAt: Date;
   type: TrackType;
   sourceUrl?: string;
+  hidden?: boolean;
 }

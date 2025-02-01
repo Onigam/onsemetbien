@@ -53,6 +53,7 @@ async function getNextTrack() {
     // Get all tracks except those already played (unless all tracks have been played)
     const unplayedTracksCount = await TrackModel.countDocuments({
       _id: { $nin: Array.from(playedTracks) },
+      hidden: { $ne: true },
     });
 
     // If all tracks have been played, reset the played tracks list

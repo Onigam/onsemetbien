@@ -64,7 +64,7 @@ async function getNextTrack() {
 
     // Build the query
     const query: any = {
-      _id: { $nin: Array.from(playedTracks) },
+      _id: { $nin: Array.from(playedTracks), hidden: { $ne: true } },
     };
 
     // Don't play same type as last track if possible

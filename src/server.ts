@@ -27,7 +27,7 @@ const s3Client = new S3Client({
 
 let currentTrack: any = null;
 let listeners = 0;
-let playedTracks: Set<string> = new Set(); // Keep track of played tracks by ID
+let playedTracks: string[] = []; // Change to an array to keep track of last 20 played tracks by ID
 let lastPlayedType: TrackType | null = null; // Keep track of last played type
 let currentTrackStartTime: number = Date.now(); // Add this line to track when the current track started
 
@@ -52,19 +52,13 @@ async function getNextTrack() {
   try {
     // Get all tracks except those already played (unless all tracks have been played)
     const unplayedTracksCount = await TrackModel.countDocuments({
-      _id: { $nin: Array.from(playedTracks) },
+      _id: { $nin: playedTracks },
       hidden: { $ne: true },
     });
 
-    // If all tracks have been played, reset the played tracks list
-    if (unplayedTracksCount === 0) {
-      console.log('All tracks have been played, resetting play history...');
-      playedTracks.clear();
-    }
-
     // Build the query
     const query: any = {
-      _id: { $nin: Array.from(playedTracks) },
+      _id: { $nin: playedTracks },
       hidden: { $ne: true },
     };
 
@@ -108,11 +102,14 @@ async function getNextTrack() {
     }
 
     // Update tracking variables
-    playedTracks.add(track._id.toString());
+    playedTracks.push(track._id.toString());
+    if (playedTracks.length > 20) {
+      playedTracks.shift(); // Remove the oldest track ID if we have more than 20
+    }
     lastPlayedType = track.type as TrackType;
 
     console.log(`Selected track: ${track.title} (${track.type})`);
-    console.log(`Played tracks count: ${playedTracks.size}`);
+    console.log(`Played tracks count: ${playedTracks.length}`);
     console.log(`Last played type: ${lastPlayedType}`);
 
     return track;
@@ -122,6 +119,12 @@ async function getNextTrack() {
   }
 }
 
+/**
+ * Play the next track
+ *
+ * This function gets the next track from the database and plays it.
+ * It also pre-fetches the next track's URL a few seconds before the current track ends.
+ */
 async function playNextTrack() {
   const nextTrack = await getNextTrack();
 

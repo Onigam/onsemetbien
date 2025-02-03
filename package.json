@@ -15,16 +15,17 @@
     "@aws-sdk/client-s3": "^3.738.0",
     "@aws-sdk/lib-storage": "^3.738.0",
     "@aws-sdk/s3-request-presigner": "^3.738.0",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "mongoose": "^8.9.5",
-    "socket.io": "^4.8.1",
-    "uuid": "^11.0.5",
-    "youtube-dl-exec": "^2.5.6",
     "@types/express": "^5.0.0",
     "@types/node": "^20.11.24",
     "@types/uuid": "^10.0.0",
-    "typescript": "^5.3.3"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "js-yaml": "^4.1.0",
+    "mongoose": "^8.9.5",
+    "socket.io": "^4.8.1",
+    "typescript": "^5.3.3",
+    "uuid": "^11.0.5",
+    "youtube-dl-exec": "^2.5.6"
   },
   "devDependencies": {
     "ts-node": "^10.9.2"

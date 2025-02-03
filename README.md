@@ -6,6 +6,10 @@ A TypeScript-based web radio system for "On se met bien", a French web radio sta
 
 Visit our website: [On se met bien](https://www.onsemetbien.net/)
 
+## Contributing
+
+See [CONTRIBUTING-ADDING-TRACKS.md](CONTRIBUTING-ADDING-TRACKS.md) for details on how to contribute to this project.
+
 ## Features
 
 - 🎵 Music Library Management

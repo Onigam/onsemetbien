@@ -1,0 +1,42 @@
+name: Track List Processor
+
+on:
+  workflow_dispatch:
+    inputs:
+      track_list_suffix:
+        description: 'The suffix of the track list file to process'
+        required: true
+        default: ''
+
+jobs:
+  track-list-processor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.7'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Extract PR Number
+        id: extract_pr_number
+        run: echo "TRACK_LIST_SUFFIX=${{ github.event.inputs.track_list_suffix }}" >> $GITHUB_ENV
+
+      - name: Process Track List
+        run: npx ts-node src/scripts/bulk-upload-tracks.ts ${{ env.TRACK_LIST_SUFFIX }}
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          OVH_REGION: ${{ secrets.OVH_REGION }}
+          OVH_BUCKET: ${{ secrets.OVH_BUCKET }}
+          OVH_ACCESS_KEY_ID: ${{ secrets.OVH_ACCESS_KEY_ID }}
+          OVH_SECRET_ACCESS_KEY: ${{ secrets.OVH_SECRET_ACCESS_KEY }}

@@ -26,7 +26,13 @@ async function processTracks(fileSuffix: string) {
 
   try {
     const trackFile = fs.readFileSync(trackListFile, 'utf8');
-    trackList = yaml.load(trackFile);
+    trackList = yaml.load(trackFile) as {
+      tracks: Array<{
+        source: string;
+        type: TrackType;
+        title_override?: string;
+      }>;
+    };
     console.log(`Track list: ${trackList}`);
   } catch (error: any) {
     throw new Error(`Failed to parse YAML file: ${error.message}`);

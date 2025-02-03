@@ -13,7 +13,7 @@ async function processTracks(fileSuffix: string) {
     throw new Error('MONGODB_URI is not set');
   }
 
-  const trackListFile = `tracks-proposals/track-list-${fileSuffix}.yaml`;
+  const trackListFile = `tracks-proposals/track-list-${fileSuffix}.yml`;
   console.log(`Processing tracks from ${fileSuffix}`);
 
   let trackList: {

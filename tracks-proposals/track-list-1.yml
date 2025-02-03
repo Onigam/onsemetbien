@@ -1,0 +1,7 @@
+tracks:
+  - source: 'https://www.youtube.com/watch?v=djjPMRQcb8Y&ab_channel=HandsFreeLyrics'
+    type: 'music'
+  - source: 'https://www.youtube.com/shorts/z1wsLlzdt8Q'
+    type: 'sketch'
+  - source: 'https://www.youtube.com/watch?v=Ja5RCpCA3uA&ab_channel=guillaumevouvray'
+    type: 'excerpt'

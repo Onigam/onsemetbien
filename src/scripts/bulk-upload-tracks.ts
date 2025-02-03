@@ -28,7 +28,7 @@ async function processTracks(fileSuffix: string) {
     const trackFile = fs.readFileSync(trackListFile, 'utf8');
     trackList = yaml.load(trackFile);
     console.log(`Track list: ${trackList}`);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Failed to parse YAML file: ${error.message}`);
   }
 
@@ -51,7 +51,7 @@ async function processTracks(fileSuffix: string) {
       );
 
       console.log(`Track ${cloudUrl} uploaded and saved successfully`);
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error processing track: ${error.message}`);
     }
   }

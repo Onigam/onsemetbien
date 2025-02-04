@@ -1,6 +1,5 @@
 tracks:
-  - source: 'https://www.youtube.com/watch?v=example1'
-    type: 'music'
+  - type: 'music'
     title_override: 'Optional Custom Title'
   - source: 'https://www.youtube.com/watch?v=example2'
     type: 'excerpt'

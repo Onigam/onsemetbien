@@ -1,7 +1,184 @@
 tracks:
-  - source: 'https://www.youtube.com/watch?v=djjPMRQcb8Y&ab_channel=HandsFreeLyrics'
-    type: 'music'
-  - source: 'https://www.youtube.com/shorts/z1wsLlzdt8Q'
-    type: 'sketch'
-  - source: 'https://www.youtube.com/watch?v=Ja5RCpCA3uA&ab_channel=guillaumevouvray'
-    type: 'excerpt'
+  - type: music
+    source: https://www.youtube.com/watch?v=4whD6uAryMs
+    title_override: Daft Punk – Digital Love
+  - type: music
+    source: https://www.youtube.com/watch?v=INbgG9M0WYE
+    title_override: Daft Punk – Voyager
+  - type: music
+    source: https://www.youtube.com/watch?v=sOS9aOIXPEk
+    title_override: Daft Punk – Something About Us
+  - type: music
+    source: https://www.youtube.com/watch?v=sy1dYFGkPUE
+    title_override: Justice – D.A.N.C.E.
+  - type: music
+    source: https://www.youtube.com/watch?v=dXokkMPhRrY
+    title_override: Justice – Phantom Pt. II
+  - type: music
+    source: https://www.youtube.com/watch?v=SVq2yMuAMVQ
+    title_override: Justice – Civilization
+  - type: music
+    source: https://www.youtube.com/watch?v=lqBhgEQ4LT0
+    title_override: Justice – Audio, Video, Disco
+  - type: music
+    source: https://www.youtube.com/watch?v=MV_3Dpw-BRY
+    title_override: Kavinsky – Nightcall
+  - type: music
+    source: https://www.youtube.com/watch?v=qT0iQRjHbW4
+    title_override: Kavinsky – Odd Look
+  - type: music
+    source: https://www.youtube.com/watch?v=41_svUt5_e0
+    title_override: Kavinsky – Protovision
+  - type: music
+    source: https://www.youtube.com/watch?v=ErQNRwH-Hmk
+    title_override: Kavinsky – Testarossa Autodrive
+  - type: music
+    source: https://www.youtube.com/watch?v=crblDrrcunQ
+    title_override: Sébastien Tellier – La Ritournelle
+  - type: music
+    source: https://www.youtube.com/watch?v=j2RP1bUy3B4
+    title_override: Sébastien Tellier – Roche
+  - type: music
+    source: https://www.youtube.com/watch?v=Uz_eZ8-exE0
+    title_override: Sébastien Tellier – Kilometer
+  - type: music
+    source: https://www.youtube.com/watch?v=I2dfGC1oziE
+    title_override: Vitalic – Poison Lips
+  - type: music
+    source: https://www.youtube.com/watch?v=50HsOJuvaKY
+    title_override: Vitalic – Stamina
+  - type: music
+    source: https://www.youtube.com/watch?v=6okxuiiHx2w
+    title_override: Breakbot – Baby I m Yours (feat. Irfane)
+  - type: music
+    source: https://www.youtube.com/watch?v=vo3BUZx5ZWQ
+    title_override: Breakbot – One Out of Two
+  - type: music
+    source: https://www.youtube.com/watch?v=ShiKVmNnp9w
+    title_override: Breakbot – Fantasy
+  - type: music
+    source: https://www.youtube.com/watch?v=qmsbP13xu6k
+    title_override: Mr Oizo – Flat Beat
+  - type: music
+    source: https://www.youtube.com/watch?v=p2OFUmv1X94
+    title_override: Mr Oizo – Positif
+  - type: music
+    source: https://www.youtube.com/watch?v=iu1RLKCdpIw
+    title_override: Mr Oizo – Stunt
+  - type: music
+    source: https://www.youtube.com/watch?v=wouKI_myXxk
+    title_override: Air – Sexy Boy
+  - type: music
+    source: https://www.youtube.com/watch?v=Rui0hzN-EFE
+    title_override: Air – Kelly Watch the Stars
+  - type: music
+    source: https://www.youtube.com/watch?v=YUX8fUrKRNU
+    title_override: Air – La Femme d Argent
+  - type: music
+    source: https://www.youtube.com/watch?v=sbFeaxz9ybM
+    title_override: Air – Run
+  - type: music
+    source: https://www.youtube.com/watch?v=NazVKnD-_sQ
+    title_override: Cassius – I <3 U So
+  - type: music
+    source: https://www.youtube.com/watch?v=RfnPCymwl9k
+    title_override: Cassius – The Sound of Violence
+  - type: music
+    source: https://www.youtube.com/watch?v=wBZM6RSqW-Y
+    title_override: Cassius – Toop Toop
+  - type: music
+    source: https://www.youtube.com/watch?v=h61QG4s0I3U
+    title_override: The Supermen Lovers – Starlight
+  - type: music
+    source: https://www.youtube.com/watch?v=3bCpUWeXjag
+    title_override: Myd – The Sun
+  - type: music
+    source: https://www.youtube.com/watch?v=KXEmeZTsyD4
+    title_override: Myd – Together We Stand
+  - type: music
+    source: https://www.youtube.com/watch?v=Hu4dTob8avQ
+    title_override: Étienne de Crécy – Am I Wrong
+  - type: music
+    source: https://www.youtube.com/watch?v=hc0S9Qg9Imc
+    title_override: Étienne de Crécy – Hashtag My Ass
+  - type: music
+    source: https://www.youtube.com/watch?v=oPTtFbB5NvU
+    title_override: Modjo – Lady (Hear Me Tonight)
+  - type: music
+    source: https://www.youtube.com/watch?v=iZAqaykiS70
+    title_override: L Impératrice – Vanille Fraise
+  - type: music
+    source: https://www.youtube.com/watch?v=jda_k6r9R1A
+    title_override: L Impératrice – Agitations Tropicales
+  - type: music
+    source: https://www.youtube.com/watch?v=FOs7wtSiJnQ
+    title_override: L Impératrice – Hématome
+  - type: music
+    source: https://www.youtube.com/watch?v=R7-v1slmarM
+    title_override: L Impératrice – Voodoo?
+  - type: music
+    source: https://www.youtube.com/watch?v=kGxOaDdg2kI
+    title_override: L Impératrice – Anomalie Bleue
+  - type: music
+    source: https://www.youtube.com/watch?v=_om0W6xzQd8
+    title_override: Polo & Pan – Canopée
+  - type: music
+    source: https://www.youtube.com/watch?v=vfXL7CABpRc
+    title_override: Polo & Pan – Plage Isolée
+  - type: music
+    source: https://www.youtube.com/watch?v=gB98kRDUTM4
+    title_override: Polo & Pan – Cœur Croisé
+  - type: music
+    source: https://www.youtube.com/watch?v=HNjn8aUbmA4
+    title_override: Polo & Pan – Mexicali
+  - type: music
+    source: https://www.youtube.com/watch?v=-5FKNViujeM
+    title_override: Kavinsky – Pacific Coast Highway
+  - type: music
+    source: https://www.youtube.com/watch?v=p-ZvHDaR72Q
+    title_override: French 79 – Diamond Veins
+  - type: music
+    source: https://www.youtube.com/watch?v=-drM4-VGm6Y
+    title_override: French 79 – Lovin  Feeling
+  - type: music
+    source: https://www.youtube.com/watch?v=yAv5pLO37mE
+    title_override: French 79 – Hometown
+  - type: music
+    source: https://www.youtube.com/watch?v=-55NdU_G28o
+    title_override: La Femme – Tatiana
+  - type: music
+    source: https://www.youtube.com/watch?v=fQDEUU1lyZQ
+    title_override: La Femme – Où va le monde
+  - type: music
+    source: https://www.youtube.com/watch?v=CqaAs_3azSs
+    title_override: LORN – Anvil
+  - type: music
+    source: https://www.youtube.com/watch?v=nxg4C365LbQ
+    title_override: LORN – Acid Rain
+  - type: music
+    source: https://www.youtube.com/watch?v=RY66fdMt4vc
+    title_override: Perturbator – Future Club
+  - type: music
+    source: https://www.youtube.com/watch?v=wy9r2qeouiQ
+    title_override: Carpenter Brut – Turbo Killer
+  - type: music
+    source: https://www.youtube.com/watch?v=qrLxoVHBF9o
+    title_override: Danger – 11:11
+  - type: music
+    source: https://www.youtube.com/watch?v=oaSTWRp7yss
+    title_override: Thylacine – Versailles
+  - type: music
+    source: https://www.youtube.com/watch?v=kfoJUeyMsOE
+    title_override: Rone – Bye Bye Macadam
+  - type: music
+    source: https://www.youtube.com/watch?v=Fv6sHgq6hFc
+    title_override: Apparat – Black Water
+  - type: music
+    source: https://www.youtube.com/watch?v=Yp257b5APOg
+    title_override: Agar Agar – Prettiest Virgin
+  - type: music
+    source: https://www.youtube.com/watch?v=oRSijEW_cDM
+    title_override: Gesaffelstein – Pursuit
+  - type: music
+    source: https://www.youtube.com/watch?v=6Mi74-Jbdgo
+    title_override: The Toxic Avenger – Angst One

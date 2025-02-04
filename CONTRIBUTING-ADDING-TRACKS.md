@@ -43,7 +43,7 @@ You can contribute tracks to the "On se met bien" web radio by submitting a pull
 
 The upload process will validate the track duration. Here are the limits:
 
-   - **Music**: Maximum 5 minutes
+   - **Music**: Maximum 6 minutes
    - **Excerpt/Sketch**: Maximum 90 seconds
    - **Jingle**: Maximum 20 seconds
 

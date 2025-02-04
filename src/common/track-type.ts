@@ -7,7 +7,7 @@ export const VALID_TRACK_TYPES = [
 ] as const;
 
 export const MAX_DURATION = {
-  music: 300, // 5 minutes
+  music: 360, // 6 minutes
   excerpt: 90, // 90 seconds
   sketch: 90, // 90 seconds
   jingle: 20, // 20 seconds

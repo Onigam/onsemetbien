@@ -6,17 +6,11 @@ tracks:
     title_override: The Chemical Brothers – Star Guitar
     source: https://www.youtube.com/watch?v=0S43IwBF0uM
   - type: music
-    title_override: Digitalism – Pogo
-    source: https://www.youtube.com/watch?v=cZvt23iBVVo
-  - type: music
     title_override: Boys Noize – & Down
     source: https://www.youtube.com/watch?v=SSUpoxKQgqo
   - type: music
     title_override: Gesaffelstein – OPR
     source: https://www.youtube.com/watch?v=_XhLIXjUtFg
-  - type: music
-    title_override: Superfunk – Lucky Star
-    source: https://www.youtube.com/watch?v=29tjEX-5Pcs
   - type: music
     title_override: Boston Bun – Paris Groove (feat. Mayer Hawthorne)
     source: https://www.youtube.com/watch?v=GxRTJVbibmQ
@@ -32,15 +26,6 @@ tracks:
   - type: music
     title_override: Todd Terje – Strandbar
     source: https://www.youtube.com/watch?v=LHA1rnsewJY
-  - type: music
-    title_override: John Talabot – Destiny (feat. Pional)
-    source: https://www.youtube.com/watch?v=le4wSxcxQgs
-  - type: music
-    title_override: Hot Chip – Over and Over
-    source: https://www.youtube.com/watch?v=pDJKgi2e-Aw
-  - type: music
-    title_override: Crystal Castles – Vanished
-    source: https://www.youtube.com/watch?v=6e6Hj7MwWaI
   - type: music
     title_override: Simian Mobile Disco – Hustler
     source: https://www.youtube.com/watch?v=c0Bf6YGbc1c
@@ -113,9 +98,6 @@ tracks:
   - type: music
     title_override: Les Rythmes Digitales – Jacques Your Body
     source: https://www.youtube.com/watch?v=fFEwFhjHQ4k
-  - type: music
-    title_override: Mount Kimbie – Made to Stray
-    source: https://www.youtube.com/watch?v=7SfFInoSotg
   - type: music
     title_override: Jan Turkenburg – In My Spaceship
     source: https://www.youtube.com/watch?v=YG-syoT7QfY

@@ -10,7 +10,8 @@
     "search:tracks": "npx ts-node src/scripts/youtube-search-tracks.ts",
     "dl:music": "npx ts-node src/index.ts music",
     "dl:excerpt": "npx ts-node src/index.ts excerpt",
-    "dl:sketch": "npx ts-node src/index.ts sketch"
+    "dl:sketch": "npx ts-node src/index.ts sketch",
+    "bulk:upload": "npx ts-node src/scripts/bulk-upload-tracks.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.738.0",

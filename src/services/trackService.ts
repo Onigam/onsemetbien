@@ -75,10 +75,7 @@ export class TrackService {
       console.log('Download completed, uploading to cloud storage...');
 
       // Upload to cloud storage
-      const cloudUrl = await this.storageService.uploadFile(
-        filePath,
-        `${trackType}/${titleOverride || fileName}`
-      );
+      const cloudUrl = await this.storageService.uploadFile(filePath, fileName);
 
       // Save to MongoDB with track type
       await TrackModel.create({

@@ -1,8 +1,13 @@
+import dotenv from 'dotenv';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import mongoose from 'mongoose';
+import path from 'path';
 import { TrackService } from '../services/trackService';
 import { TrackType } from '../types/Track';
+
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 async function processTracks(fileSuffix: string) {
   if (!fileSuffix) {

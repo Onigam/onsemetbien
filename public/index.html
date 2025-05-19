@@ -79,6 +79,55 @@
                 inset -1px -1px var(--win95-light);
         }
 
+        #skip-vote {
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--win95-light);
+            border: 2px solid var(--win95-dark);
+            /* Classic Win95 raised effect */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-darker),
+                inset 1px 1px 0 0 var(--win95-light),
+                inset -2px -2px 0 0 var(--win95-dark),
+                inset 2px 2px 0 0 var(--win95-grey);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #skip-vote button {
+            padding: 8px 16px;
+            background: var(--win95-grey);
+            border: 2px solid var(--win95-dark);
+            /* Classic Win95 raised effect */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-darker),
+                inset 1px 1px 0 0 var(--win95-light),
+                inset -2px -2px 0 0 var(--win95-dark),
+                inset 2px 2px 0 0 var(--win95-grey);
+            cursor: pointer;
+            font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+            font-size: 1em;
+        }
+
+        #skip-vote button:active {
+            /* Inset effect when clicked */
+            box-shadow:
+                inset 1px 1px 0 0 var(--win95-darker),
+                inset -1px -1px 0 0 var(--win95-light);
+        }
+
+        #skip-vote button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #vote-count {
+            font-size: 1.1em;
+            color: var(--win95-text);
+        }
+
         #audio-player {
             width: calc(100% - 4px);
             margin: 20px 0;
@@ -207,6 +256,10 @@
     <div id="player-info">
         <h2 id="now-playing">Loading...</h2>
         <p id="listeners">Listeners: 0</p>
+        <div id="skip-vote">
+            <button id="skip-button">⏭️ Skip Track</button>
+            <div id="vote-count">Skip votes: 0/0</div>
+        </div>
     </div>
     <div class="equalizer">
         <div class="bar"></div>
@@ -224,10 +277,25 @@
         const nowPlaying = document.getElementById('now-playing');
         const listenersElement = document.getElementById('listeners');
         const equalizer = document.querySelector('.equalizer');
+        const skipButton = document.getElementById('skip-button');
+        const voteCount = document.getElementById('vote-count');
+        let hasVoted = false;
+
+        // Debug connection
+        socket.on('connect', () => {
+            console.log('Connected to server with socket ID:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
 
         socket.on('trackChange', (track) => {
+            console.log('Track changed:', track);
             nowPlaying.textContent = track.title;
             audioPlayer.src = track.url;
+            hasVoted = false; // Reset vote state on track change
+            skipButton.disabled = false;
 
             if (track.currentPosition) {
                 // For new connections, set the current position
@@ -241,6 +309,27 @@
                 audioPlayer.play().catch(error => {
                     console.log('Playback failed:', error);
                 });
+            }
+        });
+
+        socket.on('listenersUpdate', (count) => {
+            console.log('Listeners updated:', count);
+            listenersElement.textContent = `Listeners: ${count}`;
+        });
+
+        socket.on('skipVotesUpdate', (data) => {
+            console.log('Skip votes updated:', data);
+            voteCount.textContent = `Skip votes: ${data.votes}/${data.required}`;
+            skipButton.disabled = hasVoted;
+        });
+
+        skipButton.addEventListener('click', () => {
+            console.log('Skip button clicked, hasVoted:', hasVoted);
+            if (!hasVoted) {
+                console.log('Emitting voteSkip event');
+                socket.emit('voteSkip');
+                hasVoted = true;
+                skipButton.disabled = true;
             }
         });
 
@@ -265,10 +354,6 @@
 
         audioPlayer.addEventListener('pause', () => {
             equalizer.classList.remove('playing');
-        });
-
-        socket.on('listenersUpdate', (count) => {
-            listenersElement.textContent = `Listeners: ${count}`;
         });
     </script>
 </body>

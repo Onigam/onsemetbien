@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
-import { TrackModel, Track } from '@onsemetbien/shared';
+import { TrackModel, Track, VALID_TRACK_TYPES } from '@onsemetbien/shared';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { volumeService } from '../services/volumeService';
+import { YoutubeDownloadService } from '../services/youtubeDownloadService';
 import dotenv from 'dotenv';
 // Load environment variables before other imports
 dotenv.config();
@@ -172,6 +173,43 @@ router.get('/:id/audio', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error getting audio URL:', error);
     res.status(500).json({ error: 'Failed to get audio URL' });
+  }
+});
+
+// POST /api/tracks/download - Download track from YouTube
+router.post('/download', async (req: Request, res: Response) => {
+  try {
+    const { url, type } = req.body;
+
+    if (!url || !type) {
+      return res.status(400).json({ error: 'URL and type are required' });
+    }
+
+    if (!VALID_TRACK_TYPES.includes(type)) {
+      return res.status(400).json({
+        error: `Invalid track type. Must be one of: ${VALID_TRACK_TYPES.join(
+          ', '
+        )}`,
+      });
+    }
+
+    // Get Socket.IO instance from app
+    const io = req.app.get('io');
+    const downloadService = new YoutubeDownloadService();
+
+    // Start download process
+    const track = await downloadService.downloadTrack(url, type, (progress) => {
+      // Emit progress to all connected clients
+      io.emit('download-progress', progress);
+    });
+
+    res.json({ success: true, track });
+  } catch (error) {
+    console.error('Error downloading track:', error);
+    res.status(500).json({
+      error:
+        error instanceof Error ? error.message : 'Failed to download track',
+    });
   }
 });
 

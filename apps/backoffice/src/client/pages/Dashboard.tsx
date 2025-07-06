@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TrackList } from '../components/TrackList/TrackList';
 import { SearchFilter } from '../components/Search/SearchFilter';
 import { Pagination } from '../components/Pagination/Pagination';
+import { AddTrackDialog } from '../components/AddTrackDialog/AddTrackDialog';
 import { useTrackList } from '../hooks/useTrackList';
 import './Dashboard.css';
 
@@ -10,6 +11,7 @@ export const Dashboard: React.FC = () => {
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const { tracks, pagination, loading, error, refetch } = useTrackList({
     page,
@@ -51,6 +53,12 @@ export const Dashboard: React.FC = () => {
               <option value={100}>100</option>
             </select>
           </div>
+          <button
+            className="add-track-button"
+            onClick={() => setIsAddDialogOpen(true)}
+          >
+            + Add New Track
+          </button>
         </div>
       </div>
 
@@ -72,6 +80,12 @@ export const Dashboard: React.FC = () => {
           )}
         </>
       )}
+
+      <AddTrackDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        onTrackAdded={refetch}
+      />
     </div>
   );
 };

@@ -1,0 +1,316 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+  background: #f8f9fa;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: #666;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover:not(:disabled) {
+  background: #e9ecef;
+  color: #333;
+}
+
+.close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dialog-body {
+  padding: 1.5rem;
+  max-height: calc(90vh - 120px);
+  overflow-y: auto;
+}
+
+.add-track-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.form-actions button {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-actions button.primary {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.form-actions button.primary:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+.form-actions button:not(.primary) {
+  background: white;
+  color: #333;
+}
+
+.form-actions button:not(.primary):hover {
+  background: #f8f9fa;
+}
+
+.processing-section {
+  text-align: center;
+}
+
+.processing-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+}
+
+.progress-section {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  transition: width 0.3s ease;
+  border-radius: 10px;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.logs-section {
+  text-align: left;
+  margin-top: 1.5rem;
+}
+
+.logs-section h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.logs-container {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+.log-entry {
+  margin-bottom: 0.25rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.log-entry:last-child {
+  margin-bottom: 0;
+}
+
+.completed-section {
+  text-align: center;
+}
+
+.completed-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #28a745;
+}
+
+.track-preview {
+  margin: 1.5rem 0;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dialog-content {
+    background: #2a2a2a;
+    color: #fff;
+  }
+  
+  .dialog-header {
+    background: #333;
+    border-bottom-color: #444;
+  }
+  
+  .dialog-header h2 {
+    color: #fff;
+  }
+  
+  .close-button {
+    color: #ccc;
+  }
+  
+  .close-button:hover:not(:disabled) {
+    background: #444;
+    color: #fff;
+  }
+  
+  .form-group label {
+    color: #fff;
+  }
+  
+  .form-group input,
+  .form-group select {
+    background: #333;
+    border-color: #555;
+    color: #fff;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #007bff;
+  }
+  
+  .form-actions button:not(.primary) {
+    background: #333;
+    color: #fff;
+    border-color: #555;
+  }
+  
+  .form-actions button:not(.primary):hover {
+    background: #444;
+  }
+  
+  .processing-section h3,
+  .logs-section h4 {
+    color: #fff;
+  }
+  
+  .progress-bar {
+    background: #444;
+  }
+  
+  .progress-text {
+    color: #ccc;
+  }
+  
+  .logs-container {
+    background: #333;
+    border-color: #555;
+    color: #fff;
+  }
+  
+  .log-entry {
+    color: #fff;
+  }
+  
+  .track-preview {
+    border-color: #555;
+  }
+}
+
+@media (max-width: 768px) {
+  .dialog-content {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .dialog-header,
+  .dialog-body {
+    padding: 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+}

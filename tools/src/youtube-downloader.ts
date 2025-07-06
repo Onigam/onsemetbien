@@ -52,7 +52,7 @@ async function downloadYoutubeVideo(url: string, trackType: string) {
       process.exit(1);
     }
 
-    console.log('Starting download...');
+    console.log('Starting download for url:', url);
 
     // Get video info first
     const info = await youtubeDl(url, {

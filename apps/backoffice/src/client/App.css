@@ -1,0 +1,28 @@
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: left;
+}
+
+.app-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.app-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-header h1 {
+    color: #fff;
+  }
+  
+  .app-header {
+    border-bottom-color: #444;
+  }
+}

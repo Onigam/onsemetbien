@@ -1,17 +1,19 @@
 {
-  "name": "youtube-downloader",
+  "name": "onsemetbien-monorepo",
   "version": "1.0.0",
-  "description": "A simple TypeScript script to download YouTube videos as MP3",
-  "main": "dist/server.js",
+  "description": "On se met bien - Web Radio System with Back Office",
+  "private": true,
   "scripts": {
-    "dev": "npx ts-node src/server.ts",
-    "start": "node dist/server.js",
-    "build": "tsc",
-    "search:tracks": "npx ts-node src/scripts/youtube-search-tracks.ts",
-    "dl:music": "npx ts-node src/index.ts music",
-    "dl:excerpt": "npx ts-node src/index.ts excerpt",
-    "dl:sketch": "npx ts-node src/index.ts sketch",
-    "bulk:upload": "npx ts-node src/scripts/bulk-upload-tracks.ts"
+    "dev:radio": "pnpm --filter webradio dev",
+    "dev:backoffice": "pnpm --filter backoffice dev",
+    "build": "pnpm -r build",
+    "start:radio": "pnpm --filter webradio start",
+    "start:backoffice": "pnpm --filter backoffice start",
+    "dl:music": "pnpm --filter tools dl music",
+    "dl:excerpt": "pnpm --filter tools dl excerpt",
+    "dl:sketch": "pnpm --filter tools dl sketch",
+    "search:tracks": "pnpm --filter tools search:tracks",
+    "bulk:upload": "pnpm --filter tools bulk:upload"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.738.0",

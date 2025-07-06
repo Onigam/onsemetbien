@@ -1,0 +1,145 @@
+.track-row {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.track-row:hover {
+  background-color: #f8f9fa;
+}
+
+.track-row.expanded {
+  background-color: #f0f8ff;
+}
+
+.track-row-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  align-items: center;
+}
+
+.track-cell {
+  display: flex;
+  align-items: center;
+}
+
+.track-title {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.track-title-text {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+.track-date {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.track-type-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-badge.visible {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.hidden {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.expand-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.expand-button:hover {
+  background-color: #e9ecef;
+}
+
+@media (prefers-color-scheme: dark) {
+  .track-row {
+    border-bottom-color: #444;
+  }
+  
+  .track-row:hover {
+    background-color: #333;
+  }
+  
+  .track-row.expanded {
+    background-color: #2a3a4a;
+  }
+  
+  .track-title-text {
+    color: #fff;
+  }
+  
+  .track-date {
+    color: #ccc;
+  }
+  
+  .status-badge.visible {
+    background-color: #1e4d2b;
+    color: #a3d9a5;
+  }
+  
+  .status-badge.hidden {
+    background-color: #4d1e24;
+    color: #f5a3a9;
+  }
+  
+  .expand-button:hover {
+    background-color: #444;
+  }
+}
+
+@media (max-width: 768px) {
+  .track-row-main {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  
+  .track-cell.track-duration,
+  .track-cell.track-status {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .track-row-main {
+    grid-template-columns: 1fr 1fr;
+    padding: 0.75rem;
+  }
+  
+  .track-cell.track-type {
+    display: none;
+  }
+  
+  .track-title-text {
+    font-size: 0.9rem;
+  }
+}

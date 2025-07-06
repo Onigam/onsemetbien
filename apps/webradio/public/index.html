@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Web Radio - On se met bien</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="On se met bien - Du culte, du lourd, du fun. Une web radio pas comme les autres.">
+    <meta name="keywords" content="web radio, On se met bien, musiques, répliques cultes, sketchs, rires et chansons">
+    <meta name="author" content="On se met bien">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WRRE4KTC6B"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-WRRE4KTC6B');
+    </script>
+    <style>
+        :root {
+            --win95-grey: #c0c0c0;
+            --win95-dark: #808080;
+            --win95-darker: #404040;
+            --win95-light: #ffffff;
+            --win95-blue: #000080;
+            --win95-text: #000000;
+            --win95-orange: #ffa500;
+        }
+
+        body {
+            font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--win95-grey);
+            color: var(--win95-text);
+        }
+
+        #player-info {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px solid var(--win95-darker);
+            background: var(--win95-grey);
+            /* Classic Win95 beveled effect */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-darker),
+                inset 1px 1px 0 0 var(--win95-light),
+                inset -2px -2px 0 0 var(--win95-dark),
+                inset 2px 2px 0 0 var(--win95-grey);
+        }
+
+        #now-playing {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: var(--win95-blue);
+            background: var(--win95-light);
+            padding: 8px;
+            border: 1px solid var(--win95-dark);
+            /* Inset effect for the display */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-light),
+                inset 1px 1px 0 0 var(--win95-darker),
+                inset -2px -2px 0 0 var(--win95-grey),
+                inset 2px 2px 0 0 var(--win95-dark);
+        }
+
+        #listeners {
+            font-size: 1.1em;
+            color: var(--win95-text);
+            margin-top: 15px;
+            padding: 5px;
+            background: var(--win95-light);
+            border: 1px solid var(--win95-dark);
+            /* Inset effect */
+            box-shadow:
+                inset 1px 1px var(--win95-darker),
+                inset -1px -1px var(--win95-light);
+        }
+
+        #skip-vote {
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--win95-light);
+            border: 2px solid var(--win95-dark);
+            /* Classic Win95 raised effect */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-darker),
+                inset 1px 1px 0 0 var(--win95-light),
+                inset -2px -2px 0 0 var(--win95-dark),
+                inset 2px 2px 0 0 var(--win95-grey);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #skip-vote button {
+            padding: 8px 16px;
+            background: var(--win95-grey);
+            border: 2px solid var(--win95-dark);
+            /* Classic Win95 raised effect */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-darker),
+                inset 1px 1px 0 0 var(--win95-light),
+                inset -2px -2px 0 0 var(--win95-dark),
+                inset 2px 2px 0 0 var(--win95-grey);
+            cursor: pointer;
+            font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+            font-size: 1em;
+        }
+
+        #skip-vote button:active {
+            /* Inset effect when clicked */
+            box-shadow:
+                inset 1px 1px 0 0 var(--win95-darker),
+                inset -1px -1px 0 0 var(--win95-light);
+        }
+
+        #skip-vote button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #vote-count {
+            font-size: 1.1em;
+            color: var(--win95-text);
+        }
+
+        #audio-player {
+            width: calc(100% - 4px);
+            margin: 20px 0;
+            height: 40px;
+            background: var(--win95-grey);
+            border: 2px solid var(--win95-dark);
+            /* Classic Win95 raised effect */
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-darker),
+                inset 1px 1px 0 0 var(--win95-light),
+                inset -2px -2px 0 0 var(--win95-dark),
+                inset 2px 2px 0 0 var(--win95-grey);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #audio-player::-webkit-media-controls-enclosure {
+            width: 100%;
+            background-color: transparent;
+            -moz-border-radius: 0px !important;
+            -webkit-border-radius: 0px !important;
+            border-radius: 0px !important;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            overflow: hidden;
+        }
+
+        #audio-player::-webkit-media-controls-panel {
+            background-color: var(--win95-grey);
+            border: none;
+        }
+
+        #audio-player::-webkit-media-controls-play-button,
+        #audio-player::-webkit-media-controls-volume-slider {
+            background-color: var(--win95-light);
+            border: 1px solid var(--win95-dark);
+            box-shadow:
+                inset -1px -1px 0 0 var(--win95-light),
+                inset 1px 1px 0 0 var(--win95-darker);
+        }
+
+        /* Equalizer animation */
+        .equalizer {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .bar {
+            width: 10px;
+            height: 30px;
+            margin: 0 2px;
+            background-color: var(--win95-orange);
+            border: 3px solid var(--win95-blue);
+        }
+
+        .playing .bar {
+            animation: bounce 0.3s infinite alternate;
+        }
+
+        .playing .bar:nth-child(2) {
+            animation-delay: 0.1s;
+            animation-duration: 0.6s;
+        }
+
+        .playing .bar:nth-child(3) {
+            animation-delay: 0.2s;
+            animation-duration: 0.4s;
+        }
+
+        .playing .bar:nth-child(4) {
+            animation-delay: 0.3s;
+            animation-duration: 0.7s;
+        }
+
+        .playing .bar:nth-child(5) {
+            animation-delay: 0.4s;
+            animation-duration: 0.5s;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: scaleY(0.5);
+            }
+
+            to {
+                transform: scaleY(1.5);
+            }
+        }
+
+        /* Windows 95 title bar effect */
+        h2 {
+            background: var(--win95-blue);
+            color: var(--win95-light);
+            padding: 2px 4px;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Remove the glow animation for more authentic Win95 look */
+        #now-playing {
+            animation: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header style="text-align: center; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <div
+                style="display: flex; align-items: center; justify-content: center; flex-direction: column; margin-right: 20px;">
+                <h1
+                    style="font-size: 2em; color: var(--win95-blue); margin: 0; text-shadow: 1px 1px var(--win95-light);">
+                    On se met bien
+                </h1>
+                <p style="font-size: 1.2em; color: var(--win95-text); margin: 5px 0;">
+                    Du culte, du lourd, du fun.
+                </p>
+            </div>
+            <img src="logo.png" alt="On se met bien" style="width: 140px; height: 140px;">
+        </div>
+
+    </header>
+    <div id="player-info">
+        <h2 id="now-playing">Loading...</h2>
+        <p id="listeners">Listeners: 0</p>
+        <div id="skip-vote">
+            <button id="skip-button">⏭️ Skip Track</button>
+            <div id="vote-count">Skip votes: 0/0</div>
+        </div>
+    </div>
+    <div class="equalizer">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+    <audio id="audio-player" controls autoplay></audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const audioPlayer = document.getElementById('audio-player');
+        const nowPlaying = document.getElementById('now-playing');
+        const listenersElement = document.getElementById('listeners');
+        const equalizer = document.querySelector('.equalizer');
+        const skipButton = document.getElementById('skip-button');
+        const voteCount = document.getElementById('vote-count');
+        let hasVoted = false;
+
+        // Debug connection
+        socket.on('connect', () => {
+            console.log('Connected to server with socket ID:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        socket.on('trackChange', (track) => {
+            console.log('Track changed:', track);
+            nowPlaying.textContent = track.title;
+            audioPlayer.src = track.url;
+            hasVoted = false; // Reset vote state on track change
+            skipButton.disabled = false;
+
+            if (track.currentPosition) {
+                // For new connections, set the current position
+                audioPlayer.currentTime = track.currentPosition;
+            } else {
+                // For track changes, start from beginning
+                audioPlayer.currentTime = 0;
+            }
+
+            if (document.body.classList.contains('user-interacted')) {
+                audioPlayer.play().catch(error => {
+                    console.log('Playback failed:', error);
+                });
+            }
+        });
+
+        socket.on('listenersUpdate', (count) => {
+            console.log('Listeners updated:', count);
+            listenersElement.textContent = `Listeners: ${count}`;
+        });
+
+        socket.on('skipVotesUpdate', (data) => {
+            console.log('Skip votes updated:', data);
+            voteCount.textContent = `Skip votes: ${data.votes}/${data.required}`;
+            skipButton.disabled = hasVoted;
+        });
+
+        skipButton.addEventListener('click', () => {
+            console.log('Skip button clicked, hasVoted:', hasVoted);
+            if (!hasVoted) {
+                console.log('Emitting voteSkip event');
+                socket.emit('voteSkip');
+                hasVoted = true;
+                skipButton.disabled = true;
+            }
+        });
+
+        // Prevent seeking in the audio player to maintain sync
+        audioPlayer.addEventListener('seeked', (event) => {
+            event.preventDefault();
+            return false;
+        });
+
+        document.body.addEventListener('click', () => {
+            document.body.classList.add('user-interacted');
+            if (audioPlayer.src && audioPlayer.paused) {
+                audioPlayer.play().catch(error => {
+                    console.log('Playback failed:', error);
+                });
+            }
+        });
+
+        audioPlayer.addEventListener('play', () => {
+            equalizer.classList.add('playing');
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            equalizer.classList.remove('playing');
+        });
+    </script>
+</body>
+
+</html>

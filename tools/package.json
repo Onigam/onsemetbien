@@ -1,0 +1,28 @@
+{
+  "name": "@onsemetbien/tools",
+  "version": "1.0.0",
+  "description": "Tools for On se met bien - YouTube downloader and utilities",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dl": "npx ts-node src/youtube-downloader.ts",
+    "search:tracks": "npx ts-node src/scripts/youtube-search-tracks.ts",
+    "bulk:upload": "npx ts-node src/scripts/bulk-upload-tracks.ts"
+  },
+  "dependencies": {
+    "@onsemetbien/shared": "workspace:*",
+    "@types/node": "^20.11.24",
+    "@types/uuid": "^10.0.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "js-yaml": "^4.1.0",
+    "uuid": "^11.0.5",
+    "yaml": "^2.7.0",
+    "youtube-dl-exec": "^2.5.6"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

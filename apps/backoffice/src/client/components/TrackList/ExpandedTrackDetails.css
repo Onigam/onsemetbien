@@ -1,0 +1,147 @@
+.expanded-track-details {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  margin-top: 1px;
+}
+
+.track-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.track-info-section h4,
+.track-controls-section h4,
+.audio-section h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 0.75rem;
+  align-items: flex-start;
+}
+
+.info-item label {
+  font-weight: 600;
+  min-width: 100px;
+  color: #666;
+  margin-right: 1rem;
+}
+
+.info-item span {
+  color: #333;
+  word-break: break-all;
+}
+
+.source-link {
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.source-link:hover {
+  text-decoration: underline;
+}
+
+.control-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.visibility-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.visibility-button.show {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.visibility-button.hide {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.visibility-button:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.visibility-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.audio-section {
+  margin-bottom: 1.5rem;
+}
+
+.audio-player {
+  width: 100%;
+  max-width: 500px;
+  height: 40px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .expanded-track-details {
+    background: #2a2a2a;
+    border-top-color: #444;
+  }
+  
+  .track-info-section h4,
+  .track-controls-section h4,
+  .audio-section h4 {
+    color: #fff;
+    border-bottom-color: #444;
+  }
+  
+  .info-item label {
+    color: #ccc;
+  }
+  
+  .info-item span {
+    color: #fff;
+  }
+  
+  .visibility-button {
+    background: #333;
+    color: #fff;
+    border-color: #555;
+  }
+}
+
+@media (max-width: 768px) {
+  .track-details-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .expanded-track-details {
+    padding: 1rem;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .info-item label {
+    min-width: auto;
+    margin-right: 0;
+  }
+}

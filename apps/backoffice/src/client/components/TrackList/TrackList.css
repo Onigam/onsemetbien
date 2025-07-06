@@ -1,0 +1,73 @@
+.track-list {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.track-list-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  font-weight: 600;
+  color: #333;
+}
+
+.track-list-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.track-list-empty {
+  padding: 3rem;
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.track-list-empty p {
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .track-list {
+    background: #2a2a2a;
+    border-color: #444;
+  }
+  
+  .track-list-header {
+    background: #333;
+    border-bottom-color: #444;
+    color: #fff;
+  }
+  
+  .track-list-empty {
+    color: #ccc;
+  }
+}
+
+@media (max-width: 768px) {
+  .track-list-header {
+    grid-template-columns: 2fr 1fr 1fr;
+    font-size: 0.9rem;
+  }
+  
+  .track-header-duration,
+  .track-header-status {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .track-list-header {
+    grid-template-columns: 1fr 1fr;
+    padding: 0.75rem;
+  }
+  
+  .track-header-type {
+    display: none;
+  }
+}

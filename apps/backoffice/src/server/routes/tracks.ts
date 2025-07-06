@@ -1,6 +1,40 @@
 import express, { Request, Response } from 'express';
 import { TrackModel, Track } from '@onsemetbien/shared';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { volumeService } from '../services/volumeService';
+import dotenv from 'dotenv';
+// Load environment variables before other imports
+dotenv.config();
+
+const s3Client = new S3Client({
+  region: process.env.OVH_REGION || 'eu-west-par',
+  endpoint: `https://s3.${process.env.OVH_REGION}.io.cloud.ovh.net`,
+  credentials: {
+    accessKeyId: process.env.OVH_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.OVH_SECRET_ACCESS_KEY || '',
+  },
+  forcePathStyle: true,
+});
+
+async function getSignedS3Url(key: string) {
+  console.log('Getting signed URL for:', key);
+
+  // Remove any full URL if it exists, we just want the filename
+  const filename = key.split('/').pop() || key;
+
+  console.log('Getting signed URL for:', filename);
+
+  const command = new GetObjectCommand({
+    Bucket: process.env.OVH_BUCKET,
+    Key: filename,
+  });
+
+  // URL expires in 1 hour
+  const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+  console.log('Signed URL:', url);
+  return url;
+}
 
 const router = express.Router();
 
@@ -100,9 +134,9 @@ router.put('/:id/volume', async (req: Request, res: Response) => {
     }
 
     // Process volume change
-    await volumeService.adjustVolume(track, volume);
+    const trackUpdated = await volumeService.adjustVolume(track, volume);
 
-    res.json({ message: 'Volume adjusted successfully' });
+    res.json({ message: 'Volume adjusted successfully', track: trackUpdated });
   } catch (error) {
     console.error('Error adjusting volume:', error);
     res.status(500).json({ error: 'Failed to adjust volume' });
@@ -122,6 +156,22 @@ router.get('/:id/metadata', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error getting metadata:', error);
     res.status(500).json({ error: 'Failed to get metadata' });
+  }
+});
+
+// GET /api/tracks/:id/audio - Get signed URL for audio playback
+router.get('/:id/audio', async (req: Request, res: Response) => {
+  try {
+    const track = await TrackModel.findById(req.params.id);
+    if (!track) {
+      return res.status(404).json({ error: 'Track not found' });
+    }
+
+    const signedUrl = await getSignedS3Url(track.url);
+    res.json({ url: signedUrl });
+  } catch (error) {
+    console.error('Error getting audio URL:', error);
+    res.status(500).json({ error: 'Failed to get audio URL' });
   }
 });
 

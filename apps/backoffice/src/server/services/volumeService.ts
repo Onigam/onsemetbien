@@ -1,9 +1,12 @@
 import ffmpeg from 'fluent-ffmpeg';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Track, StorageService } from '@onsemetbien/shared';
+import { Track, StorageService, TrackModel } from '@onsemetbien/shared';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import dotenv from 'dotenv';
+// Load environment variables before other imports
+dotenv.config();
 
 const s3Client = new S3Client({
   region: process.env.OVH_REGION || 'eu-west-par',
@@ -61,6 +64,7 @@ class VolumeService {
   async getMetadata(track: Track): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('Getting metadata for:', track.url);
         const tempFilePath = await this.downloadFromS3(track.url);
 
         ffmpeg.ffprobe(tempFilePath, (err, metadata) => {
@@ -90,11 +94,12 @@ class VolumeService {
     });
   }
 
-  async adjustVolume(track: Track, volumeMultiplier: number): Promise<void> {
+  async adjustVolume(track: Track, volumeMultiplier: number): Promise<Track> {
     return new Promise(async (resolve, reject) => {
       try {
         const inputPath = await this.downloadFromS3(track.url);
-        const outputPath = path.join(this.tempDir, `${uuidv4()}-adjusted.mp3`);
+        const newFileName = `${uuidv4()}.mp3`;
+        const outputPath = path.join(this.tempDir, newFileName);
 
         ffmpeg(inputPath)
           .audioFilters(`volume=${volumeMultiplier}`)
@@ -102,13 +107,24 @@ class VolumeService {
           .on('end', async () => {
             try {
               // Upload the adjusted file back to S3
-              await getStorageService().uploadFile(outputPath, track.url);
+              const result = await getStorageService().uploadFile(
+                outputPath,
+                newFileName
+              );
+              console.log('Uploaded adjusted file to:', result);
+
+              // Delete the original file
+              await getStorageService().deleteFile(track.url);
+
+              // Update the track with the new URL
+              track.url = newFileName;
+              await TrackModel.findByIdAndUpdate(track._id, track);
 
               // Clean up temp files
               fs.unlinkSync(inputPath);
               fs.unlinkSync(outputPath);
 
-              resolve();
+              resolve(track);
             } catch (uploadError) {
               console.error('Error uploading adjusted file:', uploadError);
               reject(uploadError);

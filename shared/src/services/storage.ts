@@ -1,4 +1,4 @@
-import { S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import fs from 'fs';
 
@@ -31,6 +31,14 @@ export class StorageService {
       },
       forcePathStyle: true,
     });
+  }
+
+  async deleteFile(fileName: string): Promise<void> {
+    const command = new DeleteObjectCommand({
+      Bucket: this.bucket,
+      Key: fileName,
+    });
+    await this.s3Client.send(command);
   }
 
   async uploadFile(filePath: string, fileName: string): Promise<string> {

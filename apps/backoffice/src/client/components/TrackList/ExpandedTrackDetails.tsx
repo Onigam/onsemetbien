@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VolumeControl } from './VolumeControl';
 import { api } from '../../services/api';
 import './ExpandedTrackDetails.css';
@@ -24,6 +24,29 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
   onUpdate,
 }) => {
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string>('');
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+
+  useEffect(() => {
+    const fetchAudioUrl = async () => {
+      setIsLoadingAudio(true);
+      try {
+        const response = await fetch(`/api/tracks/${track._id}/audio`);
+        if (response.ok) {
+          const data = await response.json();
+          setAudioUrl(data.url);
+        } else {
+          console.error('Failed to fetch audio URL');
+        }
+      } catch (error) {
+        console.error('Error fetching audio URL:', error);
+      } finally {
+        setIsLoadingAudio(false);
+      }
+    };
+
+    fetchAudioUrl();
+  }, [track._id]);
 
   const handleVisibilityToggle = async () => {
     setIsUpdatingVisibility(true);
@@ -36,11 +59,6 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
     } finally {
       setIsUpdatingVisibility(false);
     }
-  };
-
-  const getAudioUrl = () => {
-    // For now, we'll use a placeholder since we need signed URLs from the backend
-    return `/api/tracks/${track._id}/audio`;
   };
 
   return (
@@ -93,10 +111,16 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
 
       <div className="audio-section">
         <h4>Audio Player</h4>
-        <audio controls className="audio-player">
-          <source src={getAudioUrl()} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
+        {isLoadingAudio ? (
+          <div className="loading-audio">Loading audio...</div>
+        ) : audioUrl ? (
+          <audio controls className="audio-player" key={audioUrl}>
+            <source src={audioUrl} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        ) : (
+          <div className="audio-error">Failed to load audio</div>
+        )}
       </div>
 
       <VolumeControl track={track} onUpdate={onUpdate} />

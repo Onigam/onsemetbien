@@ -1,11 +1,11 @@
-import { TrackModel } from '@onsemetbien/shared';
-import express from 'express';
+import express, { Request, Response } from 'express';
+import { TrackModel, Track } from '@onsemetbien/shared';
 import { volumeService } from '../services/volumeService';
 
 const router = express.Router();
 
 // GET /api/tracks - List tracks with pagination and search
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
@@ -49,7 +49,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/tracks/:id - Get single track details
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const track = await TrackModel.findById(req.params.id);
     if (!track) {
@@ -63,7 +63,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // PUT /api/tracks/:id/visibility - Toggle track visibility
-router.put('/:id/visibility', async (req, res) => {
+router.put('/:id/visibility', async (req: Request, res: Response) => {
   try {
     const { hidden } = req.body;
     const track = await TrackModel.findByIdAndUpdate(
@@ -84,7 +84,7 @@ router.put('/:id/visibility', async (req, res) => {
 });
 
 // PUT /api/tracks/:id/volume - Re-encode track with new volume
-router.put('/:id/volume', async (req, res) => {
+router.put('/:id/volume', async (req: Request, res: Response) => {
   try {
     const { volume } = req.body;
 
@@ -110,7 +110,7 @@ router.put('/:id/volume', async (req, res) => {
 });
 
 // GET /api/tracks/:id/metadata - Get track metadata
-router.get('/:id/metadata', async (req, res) => {
+router.get('/:id/metadata', async (req: Request, res: Response) => {
   try {
     const track = await TrackModel.findById(req.params.id);
     if (!track) {

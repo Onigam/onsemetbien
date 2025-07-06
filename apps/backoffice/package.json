@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@onsemetbien/shared": "workspace:*",
-    "@types/express": "^5.0.0",
+    "@types/express": "^4.17.23",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

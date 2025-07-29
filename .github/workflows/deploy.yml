@@ -9,7 +9,7 @@ permissions:
   packages: write
 
 jobs:
-  deploy:
+  deploy-webradio:
     runs-on: ubuntu-latest
     environment: production
 
@@ -25,8 +25,30 @@ jobs:
       - name: Install Railway
         run: npm i -g @railway/cli
 
-      - name: Deploy
-        run: railway up --service ${{ secrets.RAILWAY_SERVICE_NAME }}
+      - name: Deploy WebRadio
+        run: railway up --service ${{ secrets.RAILWAY_WEBRADIO_SERVICE_NAME }} --config railway.webradio.json
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+
+  deploy-backoffice:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Railway
+        run: npm i -g @railway/cli
+
+      - name: Deploy Backoffice
+        run: railway up --service ${{ secrets.RAILWAY_BACKOFFICE_SERVICE_NAME }} --config railway.backoffice.json
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}

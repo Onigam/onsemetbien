@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  webradio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: onsemetbien-webradio
+    ports:
+      - '3001:3001'
+    restart: unless-stopped
+    # Uncomment for development with live code changes
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    #   - /app/shared/node_modules
+    #   - /app/apps/webradio/node_modules
+    #   - /app/tools/node_modules

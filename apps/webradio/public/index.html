@@ -18,78 +18,128 @@
         gtag('config', 'G-WRRE4KTC6B');
     </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=DM+Sans:wght@400;700&display=swap');
+
         :root {
-            --win95-grey: #c0c0c0;
-            --win95-dark: #808080;
-            --win95-darker: #404040;
-            --win95-light: #ffffff;
-            --win95-blue: #000080;
-            --win95-text: #000000;
-            --win95-orange: #ffa500;
+            --neo-bg: #f5f5f0;
+            --neo-black: #000000;
+            --neo-white: #ffffff;
+            --neo-primary: #FF3D00;
+            --neo-secondary: #00E5FF;
+            --neo-accent: #FFC107;
+            --neo-purple: #B794F6;
+            --neo-green: #4ADE80;
+            --shadow-offset: 6px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
-            max-width: 800px;
+            font-family: 'DM Sans', sans-serif;
+            max-width: 750px;
             margin: 0 auto;
             padding: 20px;
-            background-color: var(--win95-grey);
-            color: var(--win95-text);
+            background-color: var(--neo-bg);
+            color: var(--neo-black);
+            line-height: 1.4;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 30px;
+            background: var(--neo-white);
+            border: 4px solid var(--neo-black);
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--neo-black);
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            background: var(--neo-primary);
+            z-index: -1;
+            border: 4px solid var(--neo-black);
+        }
+
+        h1 {
+            font-size: 3em;
+            color: var(--neo-black);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--neo-black);
+            margin: 10px 0;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: 120px;
+            border: 4px solid var(--neo-black);
+            box-shadow: 4px 4px 0 var(--neo-black);
+            margin-left: 20px;
         }
 
         #player-info {
-            text-align: center;
-            margin: 40px 0;
+            background: var(--neo-secondary);
+            border: 4px solid var(--neo-black);
+            box-shadow: 6px 6px 0 var(--neo-black);
             padding: 20px;
-            border: 2px solid var(--win95-darker);
-            background: var(--win95-grey);
-            /* Classic Win95 beveled effect */
-            box-shadow:
-                inset -1px -1px 0 0 var(--win95-darker),
-                inset 1px 1px 0 0 var(--win95-light),
-                inset -2px -2px 0 0 var(--win95-dark),
-                inset 2px 2px 0 0 var(--win95-grey);
+            margin: 25px 0;
+            position: relative;
         }
 
         #now-playing {
-            font-size: 1.6em;
-            margin-bottom: 15px;
-            color: var(--win95-blue);
-            background: var(--win95-light);
-            padding: 8px;
-            border: 1px solid var(--win95-dark);
-            /* Inset effect for the display */
-            box-shadow:
-                inset -1px -1px 0 0 var(--win95-light),
-                inset 1px 1px 0 0 var(--win95-darker),
-                inset -2px -2px 0 0 var(--win95-grey),
-                inset 2px 2px 0 0 var(--win95-dark);
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: var(--neo-white);
+            border: 4px solid var(--neo-black);
+            box-shadow: 3px 3px 0 var(--neo-black);
+            word-wrap: break-word;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         #listeners {
-            font-size: 1.1em;
-            color: var(--win95-text);
-            margin-top: 15px;
-            padding: 5px;
-            background: var(--win95-light);
-            border: 1px solid var(--win95-dark);
-            /* Inset effect */
-            box-shadow:
-                inset 1px 1px var(--win95-darker),
-                inset -1px -1px var(--win95-light);
+            font-size: 1em;
+            font-weight: 700;
+            padding: 10px 20px;
+            background: var(--neo-accent);
+            border: 4px solid var(--neo-black);
+            box-shadow: 3px 3px 0 var(--neo-black);
+            display: inline-block;
+            margin-top: 12px;
         }
 
         #skip-vote {
             margin-top: 15px;
-            padding: 10px;
-            background: var(--win95-light);
-            border: 2px solid var(--win95-dark);
-            /* Classic Win95 raised effect */
-            box-shadow:
-                inset -1px -1px 0 0 var(--win95-darker),
-                inset 1px 1px 0 0 var(--win95-light),
-                inset -2px -2px 0 0 var(--win95-dark),
-                inset 2px 2px 0 0 var(--win95-grey);
+            padding: 15px;
+            background: var(--neo-purple);
+            border: 4px solid var(--neo-black);
+            box-shadow: 3px 3px 0 var(--neo-black);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -97,92 +147,59 @@
         }
 
         #skip-vote button {
-            padding: 8px 16px;
-            background: var(--win95-grey);
-            border: 2px solid var(--win95-dark);
-            /* Classic Win95 raised effect */
-            box-shadow:
-                inset -1px -1px 0 0 var(--win95-darker),
-                inset 1px 1px 0 0 var(--win95-light),
-                inset -2px -2px 0 0 var(--win95-dark),
-                inset 2px 2px 0 0 var(--win95-grey);
+            padding: 10px 25px;
+            background: var(--neo-primary);
+            color: var(--neo-white);
+            border: 4px solid var(--neo-black);
+            box-shadow: 3px 3px 0 var(--neo-black);
             cursor: pointer;
-            font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1em;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.1s ease;
+            letter-spacing: 1px;
         }
 
-        #skip-vote button:active {
-            /* Inset effect when clicked */
-            box-shadow:
-                inset 1px 1px 0 0 var(--win95-darker),
-                inset -1px -1px 0 0 var(--win95-light);
+        #skip-vote button:hover:not(:disabled) {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 var(--neo-black);
+        }
+
+        #skip-vote button:active:not(:disabled) {
+            transform: translate(3px, 3px);
+            box-shadow: none;
         }
 
         #skip-vote button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: #999;
         }
 
         #vote-count {
-            font-size: 1.1em;
-            color: var(--win95-text);
+            font-size: 1em;
+            font-weight: 700;
+            padding: 8px 15px;
+            background: var(--neo-white);
+            border: 3px solid var(--neo-black);
         }
 
-        #audio-player {
-            width: calc(100% - 4px);
-            margin: 20px 0;
-            height: 40px;
-            background: var(--win95-grey);
-            border: 2px solid var(--win95-dark);
-            /* Classic Win95 raised effect */
-            box-shadow:
-                inset -1px -1px 0 0 var(--win95-darker),
-                inset 1px 1px 0 0 var(--win95-light),
-                inset -2px -2px 0 0 var(--win95-dark),
-                inset 2px 2px 0 0 var(--win95-grey);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #audio-player::-webkit-media-controls-enclosure {
-            width: 100%;
-            background-color: transparent;
-            -moz-border-radius: 0px !important;
-            -webkit-border-radius: 0px !important;
-            border-radius: 0px !important;
-            filter: alpha(opacity=80);
-            opacity: 0.8;
-            overflow: hidden;
-        }
-
-        #audio-player::-webkit-media-controls-panel {
-            background-color: var(--win95-grey);
-            border: none;
-        }
-
-        #audio-player::-webkit-media-controls-play-button,
-        #audio-player::-webkit-media-controls-volume-slider {
-            background-color: var(--win95-light);
-            border: 1px solid var(--win95-dark);
-            box-shadow:
-                inset -1px -1px 0 0 var(--win95-light),
-                inset 1px 1px 0 0 var(--win95-darker);
-        }
-
-        /* Equalizer animation */
         .equalizer {
             display: flex;
             justify-content: center;
-            margin-bottom: 40px;
+            align-items: flex-end;
+            gap: 6px;
+            margin: 20px 0;
+            height: 60px;
         }
 
         .bar {
-            width: 10px;
+            width: 16px;
             height: 30px;
-            margin: 0 2px;
-            background-color: var(--win95-orange);
-            border: 3px solid var(--win95-blue);
+            background-color: var(--neo-green);
+            border: 3px solid var(--neo-black);
+            box-shadow: 2px 2px 0 var(--neo-black);
         }
 
         .playing .bar {
@@ -213,49 +230,72 @@
             from {
                 transform: scaleY(0.5);
             }
-
             to {
                 transform: scaleY(1.5);
             }
         }
 
-        /* Windows 95 title bar effect */
-        h2 {
-            background: var(--win95-blue);
-            color: var(--win95-light);
-            padding: 2px 4px;
-            margin: 0 0 10px 0;
-            font-weight: bold;
-            font-size: 1.2em;
+        #audio-player {
+            width: 100%;
+            height: 50px;
+            margin: 20px 0;
+            background: var(--neo-white);
+            border: 4px solid var(--neo-black);
+            box-shadow: 4px 4px 0 var(--neo-black);
         }
 
-        /* Remove the glow animation for more authentic Win95 look */
-        #now-playing {
-            animation: none;
+        #audio-player::-webkit-media-controls-panel {
+            background-color: var(--neo-white);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .logo-img {
+                width: 60px;
+                height: 60px;
+                margin: 15px 0 0 0;
+            }
+
+            header > div {
+                flex-direction: column !important;
+            }
+
+            #now-playing {
+                font-size: 1.2em;
+            }
+
+            .bar {
+                width: 12px;
+                height: 25px;
+            }
+
+            .equalizer {
+                height: 50px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header style="text-align: center; margin-bottom: 20px;">
+    <header>
         <div style="display: flex; align-items: center; justify-content: center;">
-            <div
-                style="display: flex; align-items: center; justify-content: center; flex-direction: column; margin-right: 20px;">
-                <h1
-                    style="font-size: 2em; color: var(--win95-blue); margin: 0; text-shadow: 1px 1px var(--win95-light);">
-                    On se met bien
-                </h1>
-                <p style="font-size: 1.2em; color: var(--win95-text); margin: 5px 0;">
-                    Du culte, du lourd, du fun.
-                </p>
+            <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; margin-right: 20px;">
+                <h1>On se met bien</h1>
+                <p class="tagline">Du culte, du lourd, du fun.</p>
             </div>
-            <img src="logo.png" alt="On se met bien" style="width: 140px; height: 140px;">
+            <img src="logo.png" alt="On se met bien" class="logo-img">
         </div>
-
     </header>
     <div id="player-info">
-        <h2 id="now-playing">Loading...</h2>
-        <p id="listeners">Listeners: 0</p>
+        <div id="now-playing">Loading...</div>
+        <div id="listeners">Listeners: 0</div>
         <div id="skip-vote">
             <button id="skip-button">⏭️ Skip Track</button>
             <div id="vote-count">Skip votes: 0/0</div>

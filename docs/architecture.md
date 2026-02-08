@@ -2,7 +2,7 @@
 
 ## Overview
 
-On se met bien is a real-time web radio streaming platform. The architecture prioritizes simplicity, real-time synchronization, and a fun retro user experience.
+On se met bien is a real-time web radio streaming platform. The architecture prioritizes simplicity, real-time synchronization, and a fun neobrutalist user experience.
 
 ---
 
@@ -11,7 +11,7 @@ On se met bien is a real-time web radio streaming platform. The architecture pri
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                      User Browser                            │
-│  - Windows 95 player interface (public/index.html)           │
+│  - Neobrutalist player interface (public/index.html)         │
 │  - HTML5 <audio> element for playback                        │
 │  - Socket.IO client for real-time events                     │
 └────────────────────────┬─────────────────────────────────────┘
@@ -117,28 +117,29 @@ The frontend is a **single `index.html`** file containing:
 
 | Section | Content |
 |---------|---------|
-| `<style>` | ~235 lines of CSS with Win95 theme variables |
-| `<body>` | HTML structure (header, player, equalizer) |
-| `<script>` | ~85 lines of JS (Socket.IO client, audio controls) |
+| `<style>` | CSS with neobrutalist theme and custom audio player |
+| `<body>` | HTML structure (header, player, equalizer, custom controls) |
+| `<script>` | JavaScript (Socket.IO client, custom audio player controls) |
 
-### CSS Design Tokens (Custom Properties)
+### Design System: Neobrutalism
 
-```css
---win95-grey: #c0c0c0;      /* Main background */
---win95-dark: #808080;       /* Border dark */
---win95-darker: #404040;     /* Border darker */
---win95-light: #ffffff;      /* Border light / highlights */
---win95-blue: #000080;       /* Title bars, headings */
---win95-text: #000000;       /* Body text */
---win95-orange: #ffa500;     /* Equalizer bars accent */
-```
+The UI uses a colorful neobrutalist design with:
+- **Light beige background** (`#e8e0d0`) as the page canvas
+- **Thick black borders** (3-4px) on all panels and elements
+- **Cyan panels** (`#00e5ff`) for the player info area
+- **Purple accents** (`#c39bd3`) for the skip vote section
+- **Orange/red buttons** for interactive elements (skip, play)
+- **Green progress bar** for audio playback
+- **Bold uppercase typography** for headings
+- **Parrot mascot** with sunglasses as the radio logo
+- **Flat, no-shadow** aesthetic with strong geometric shapes
 
 ### UI Components (Currently in HTML)
 
-1. **Header** - Logo + title + tagline
-2. **Player Info Panel** - Now-playing display, listener count, skip vote
-3. **Equalizer** - 5 animated bars with CSS keyframe animation
-4. **Audio Player** - Native `<audio>` element with custom Win95 styling
+1. **Header** - Title (bold uppercase) + parrot logo + tagline
+2. **Player Info Panel** - Cyan background with now-playing display, orange listener badge, purple skip vote area
+3. **Equalizer** - 5 animated bars (dark green)
+4. **Audio Player** - Fully custom-built player with red play button, green progress bar, orange volume slider, time display
 
 ---
 
@@ -161,24 +162,24 @@ The frontend is a **single `index.html`** file containing:
 
 ## Future Architecture (Post TypeScript Refactor)
 
-The planned refactor will convert `public/index.html` into a proper TypeScript frontend while keeping the exact same visual design:
+The planned refactor will convert `public/index.html` into a proper TypeScript frontend while keeping the exact same neobrutalist visual design:
 
 ```
 apps/webradio/
 ├── src/
 │   ├── components/
-│   │   ├── Header.ts          # Logo + title
-│   │   ├── PlayerInfo.ts      # Now-playing panel
+│   │   ├── Header.ts          # Logo + title + tagline
+│   │   ├── PlayerInfo.ts      # Now-playing panel (cyan)
 │   │   ├── Equalizer.ts       # Animated bars
-│   │   ├── AudioPlayer.ts     # Audio controls
-│   │   ├── SkipVote.ts        # Skip voting UI
-│   │   └── ListenerCount.ts   # Listener display
+│   │   ├── AudioPlayer.ts     # Custom audio controls
+│   │   ├── SkipVote.ts        # Skip voting UI (purple)
+│   │   └── ListenerCount.ts   # Orange listener badge
 │   ├── services/
 │   │   ├── socket.ts          # Socket.IO client wrapper
 │   │   └── audio.ts           # Audio playback manager
 │   ├── styles/
-│   │   ├── variables.css      # Win95 CSS custom properties
-│   │   ├── win95.css          # Win95 base styles
+│   │   ├── variables.css      # Neobrutalist CSS custom properties
+│   │   ├── neobrutalist.css   # Base neobrutalist styles
 │   │   └── components.css     # Component-specific styles
 │   ├── types/
 │   │   └── events.ts          # Socket.IO event types

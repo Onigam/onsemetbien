@@ -37,7 +37,7 @@ If you're an AI agent tasked with implementing or maintaining On se met bien, st
 
 ### Key Principles for AI Agents
 
-- **Preserve the design**: The Windows 95 neobrutalist aesthetic must be kept pixel-perfect during refactoring
+- **Preserve the design**: The neobrutalist aesthetic (thick borders, cyan/purple/orange palette) must be kept pixel-perfect during refactoring
 - **Type Safety**: All new code must be TypeScript with strict mode
 - **Real-time first**: Socket.IO events are the backbone - never break the real-time sync
 - **Simple over clever**: This is a fun radio app, keep it straightforward

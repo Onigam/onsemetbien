@@ -2,14 +2,14 @@
 
 ## Mission Statement
 
-Refactor the On se met bien web radio frontend from a monolithic `public/index.html` into a proper TypeScript application, preserving the **exact** Windows 95 neobrutalist design pixel-for-pixel. Deliver a production-ready codebase via pull request.
+Refactor the On se met bien web radio frontend from a monolithic `public/index.html` into a proper TypeScript application, preserving the **exact** neobrutalist design pixel-for-pixel. Deliver a production-ready codebase via pull request.
 
 ## Project Context
 
 **Repository**: onsemetbien (pnpm monorepo)
 **Current State**: Working web radio with monolithic HTML/CSS/JS frontend
 **Goal**: Refactor frontend into TypeScript components with proper architecture
-**Critical Constraint**: The UI must look IDENTICAL to the current version
+**Critical Constraint**: The UI must look IDENTICAL to the current neobrutalist design (see `apps/webradio/public/screenshot.png`)
 **Execution**: Multi-agent parallel implementation with sequential phase dependencies
 **Deliverable**: Pull request with complete refactored frontend
 
@@ -17,8 +17,8 @@ Refactor the On se met bien web radio frontend from a monolithic `public/index.h
 
 - Working Express.js + Socket.IO server (`src/server.ts`)
 - Monolithic frontend (`public/index.html` - ~360 lines)
-  - Inline CSS (~235 lines) with Win95 design tokens
-  - Inline JavaScript (~85 lines) with Socket.IO client
+  - Inline CSS with neobrutalist design (cyan, purple, orange palette, thick black borders)
+  - Inline JavaScript with Socket.IO client and custom audio player
 - MongoDB track database with Mongoose models
 - OVH S3 audio storage with presigned URLs
 - pnpm monorepo structure with apps/, shared/, tools/
@@ -41,7 +41,7 @@ Refactor the frontend **only** - the server stays as-is:
 
 **In Scope** (Implement Now):
 - Extract CSS custom properties into `variables.css`
-- Extract Win95 base styles into `win95.css`
+- Extract base neobrutalist styles into `neobrutalist.css`
 - Extract component styles into separate files
 - Create TypeScript component files (Header, PlayerInfo, Equalizer, AudioPlayer, SkipVote, ListenerCount)
 - Create typed Socket.IO client service
@@ -120,7 +120,7 @@ All agents MUST read and follow these documents:
 **UI Designer** (`ui-designer`)
 - Extract and organize CSS architecture
 - Verify visual parity (pixel-perfect)
-- Ensure Win95 design tokens are preserved
+- Ensure neobrutalist design is preserved (colors, borders, layout)
 - Validate responsive behavior
 
 **Backend Developer** (`backend-developer`)
@@ -146,25 +146,18 @@ All agents MUST read and follow these documents:
    - Document all JavaScript behaviors
    - Take screenshots for visual reference
 
-2. **Extract design tokens**:
-   ```css
-   /* variables.css */
-   :root {
-     --win95-grey: #c0c0c0;
-     --win95-dark: #808080;
-     --win95-darker: #404040;
-     --win95-light: #ffffff;
-     --win95-blue: #000080;
-     --win95-text: #000000;
-     --win95-orange: #ffa500;
-   }
-   ```
+2. **Extract design tokens** from the current CSS:
+   - Background, panel, and accent colors
+   - Border widths and styles
+   - Typography (font families, sizes, weights)
+   - Component-specific colors (cyan player info, purple skip area, orange buttons)
+   - Reference `apps/webradio/public/screenshot.png` for visual accuracy
 
 3. **Define component boundaries**:
    - Header (logo, title, tagline)
    - PlayerInfo (now-playing, listeners, skip-vote)
    - Equalizer (5 animated bars)
-   - AudioPlayer (HTML5 audio with Win95 chrome)
+   - AudioPlayer (custom-built audio player with controls)
    - SkipVote (button + vote count)
    - ListenerCount (listener display)
 
@@ -249,10 +242,10 @@ All agents MUST read and follow these documents:
 **Dependencies**: Phase 2 complete
 
 1. **Extract CSS into modules**:
-   - `styles/variables.css` - Custom properties
-   - `styles/win95.css` - Base Win95 styles (beveled borders, buttons, title bars)
+   - `styles/variables.css` - Custom properties (colors, borders, typography)
+   - `styles/neobrutalist.css` - Base neobrutalist styles (thick borders, flat panels, bold colors)
    - `styles/equalizer.css` - Equalizer animation
-   - `styles/player.css` - Audio player styling
+   - `styles/player.css` - Custom audio player styling
    - `styles/layout.css` - Body, header, overall layout
 
 2. **Verify CSS parity**: Import all CSS in `main.ts` and confirm visual match
@@ -339,7 +332,7 @@ Each component:
 1. **Visual verification**:
    - Compare screenshots side-by-side
    - Check all CSS animations (equalizer bounce)
-   - Verify Win95 beveled effects
+   - Verify neobrutalist effects (thick borders, color panels)
    - Test responsive behavior
 
 2. **Functional verification**:
@@ -401,10 +394,11 @@ When completing work for another agent:
 ## Success Criteria
 
 ### Visual Requirements
-- The refactored frontend looks **identical** to `public/index.html`
+- The refactored frontend looks **identical** to `public/index.html` (compare with `apps/webradio/public/screenshot.png`)
 - All CSS animations work (equalizer bars)
-- All Win95 beveled effects render correctly
-- Logo, title, and tagline positioned correctly
+- Neobrutalist design renders correctly (thick borders, cyan/purple/orange palette)
+- Custom audio player works (red play button, green progress, orange volume)
+- Logo (parrot), title, and tagline positioned correctly
 
 ### Functional Requirements
 - Track playback works end-to-end

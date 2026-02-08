@@ -8,7 +8,14 @@ services:
     container_name: onsemetbien-webradio
     ports:
       - '3001:3001'
+    env_file:
+      - .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
     restart: unless-stopped
+    networks:
+      - webradio-network
     # Uncomment for development with live code changes
     # volumes:
     #   - .:/app
@@ -16,3 +23,26 @@ services:
     #   - /app/shared/node_modules
     #   - /app/apps/webradio/node_modules
     #   - /app/tools/node_modules
+
+  mongodb:
+    image: mongo:7.0
+    container_name: onsemetbien-mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - webradio-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  webradio-network:
+    driver: bridge

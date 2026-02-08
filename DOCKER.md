@@ -11,15 +11,19 @@ This document explains how to run the On se met bien web radio system using Dock
 
 1. **Set up environment variables**:
    ```bash
-   cp .env.docker .env
+   cp .env.example .env
    ```
-   Edit the `.env` file with your actual OVH credentials:
+   Edit the `.env` file with your actual credentials:
    ```bash
-   OVH_REGION=gra
+   MONGODB_URI=mongodb://mongodb:27017/webradio
+   OVH_REGION=eu-west-par
    OVH_ACCESS_KEY_ID=your_actual_access_key
    OVH_SECRET_ACCESS_KEY=your_actual_secret_key
    OVH_BUCKET=your_actual_bucket_name
+   PORT=3001
    ```
+
+   **Note**: When using the Docker MongoDB service, set `MONGODB_URI=mongodb://mongodb:27017/webradio` (using the Docker service name `mongodb` as host).
 
 2. **Build and start the services**:
    ```bash
@@ -78,13 +82,14 @@ docker-compose up
 - **Container**: `onsemetbien-webradio`
 - **Port**: 3001
 - **Built from**: Local Dockerfile
-- **Dependencies**: MongoDB
+- **Dependencies**: MongoDB (waits for healthy status)
 
 ### MongoDB Database
 - **Container**: `onsemetbien-mongodb`
 - **Port**: 27017
 - **Image**: mongo:7.0
 - **Data persistence**: Named volume `mongodb_data`
+- **Health check**: Pings MongoDB every 10 seconds
 
 ## Data Persistence
 
@@ -105,7 +110,7 @@ ports:
 ```
 
 ### Environment variables not loading
-Ensure your `.env` file is in the same directory as `docker-compose.yml` and contains all required variables.
+Ensure your `.env` file is in the same directory as `docker-compose.yml` and contains all required variables. The `env_file` directive in docker-compose.yml automatically loads it.
 
 ### MongoDB connection issues
 The application waits for MongoDB to be healthy before starting. Check MongoDB logs:
@@ -128,9 +133,9 @@ For production deployment:
 1. Remove development volume mounts
 2. Set appropriate restart policies
 3. Use environment-specific `.env` files
-4. Consider using external MongoDB service
+4. Consider using an external MongoDB service (e.g., MongoDB Atlas)
 5. Set up proper logging and monitoring
 
 ## Network Architecture
 
-Services communicate through a custom Docker network (`webradio-network`). The application connects to MongoDB using the service name `mongodb:27017`.
+Services communicate through a custom Docker network (`webradio-network`). The application connects to MongoDB using the service name `mongodb` as the hostname.

@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python-is-python3 \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install -g pnpm
+    && npm install -g pnpm@9
 
 # Set working directory
 WORKDIR /app
@@ -18,6 +18,7 @@ COPY pnpm-lock.yaml ./
 # Copy all package.json files for workspace dependencies
 COPY shared/package.json ./shared/
 COPY apps/webradio/package.json ./apps/webradio/
+COPY apps/backoffice/package.json ./apps/backoffice/
 COPY tools/package.json ./tools/
 
 # Install dependencies using pnpm

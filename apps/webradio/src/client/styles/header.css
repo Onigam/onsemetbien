@@ -23,7 +23,7 @@ header::before {
 h1 {
     font-size: 3em;
     color: var(--neo-black);
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     text-transform: uppercase;
     letter-spacing: -2px;
 }
@@ -36,7 +36,7 @@ h1 {
 }
 
 .logo-img {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     margin-left: 20px;
 }

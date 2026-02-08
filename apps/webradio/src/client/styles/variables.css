@@ -1,0 +1,11 @@
+:root {
+    --neo-bg: #f5f5f0;
+    --neo-black: #000000;
+    --neo-white: #ffffff;
+    --neo-primary: #FF3D00;
+    --neo-secondary: #00E5FF;
+    --neo-accent: #FFC107;
+    --neo-purple: #B794F6;
+    --neo-green: #4ADE80;
+    --shadow-offset: 6px;
+}

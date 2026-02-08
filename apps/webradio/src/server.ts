@@ -6,6 +6,7 @@ import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import express from 'express';
 import { createServer } from 'http';
+import path from 'path';
 import { Server } from 'socket.io';
 import { connectToDatabase, TrackModel, TrackType } from '@onsemetbien/shared';
 
@@ -237,6 +238,9 @@ io.on('connection', async (socket) => {
   });
 });
 
+// Serve the Vite-built client in production, fall back to public/ for legacy
+const clientDistPath = path.join(__dirname, '..', 'client');
+app.use(express.static(clientDistPath));
 app.use(express.static('public'));
 
 app.get('/health', (req, res) => {

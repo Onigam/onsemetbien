@@ -1,12 +1,12 @@
 import dotenv from 'dotenv';
-// Load environment variables before other imports
-dotenv.config();
+import path from 'path';
+// Load environment variables from the monorepo root .env file
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '..', '.env') });
 
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import express from 'express';
 import { createServer } from 'http';
-import path from 'path';
 import { Server } from 'socket.io';
 import { connectToDatabase, TrackModel, TrackType } from '@onsemetbien/shared';
 

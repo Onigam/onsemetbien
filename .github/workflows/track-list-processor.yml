@@ -13,22 +13,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-      - name: Extract PR Number
-        id: extract_pr_number
-        run: echo "TRACK_LIST_SUFFIX=${{ github.event.inputs.track_list_suffix }}" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter shared build
 
       - name: Process Track List
-        run: npx ts-node src/scripts/bulk-upload-tracks.ts ${{ env.TRACK_LIST_SUFFIX }}
+        run: pnpm --filter tools bulk:upload ${{ github.event.inputs.track_list_suffix }}
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           OVH_REGION: ${{ secrets.OVH_REGION }}

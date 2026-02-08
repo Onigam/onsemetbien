@@ -5,11 +5,11 @@ This directory contains prompts designed for coordinating multi-agent AI systems
 ## Contents
 
 ### [`multi-agent-implementation.md`](./multi-agent-implementation.md)
-**Purpose**: Master orchestration prompt for refactoring the frontend from a monolithic `index.html` into a TypeScript application while preserving the exact Windows 95 neobrutalist design.
+**Purpose**: Master orchestration prompt for refactoring the frontend from a monolithic `index.html` into a TypeScript application while preserving the exact neobrutalist design.
 
 **What it does**:
 - Coordinates specialized AI agents to refactor the frontend
-- Preserves pixel-perfect Win95 design throughout the process
+- Preserves pixel-perfect neobrutalist design throughout the process
 - Implements proper TypeScript component architecture
 - Delivers production-ready code via pull request
 
@@ -64,7 +64,7 @@ Before using the multi-agent implementation prompt:
    - Review the feature branch
    - Check the pull request
    - Test the implementation locally
-   - Verify the Win95 design is preserved
+   - Verify the neobrutalist design is preserved
 
 ### Execution Phases (TypeScript Refactor)
 
@@ -91,7 +91,7 @@ All implementations must meet:
 - TypeScript strict mode (no `any` types)
 - Socket.IO events must remain backward-compatible
 - Audio playback and skip voting must work identically
-- CSS custom properties preserved (`--win95-*` variables)
+- Neobrutalist design preserved (thick borders, cyan/purple/orange palette, custom audio player)
 - Real-time listener sync must not break
 
 ---

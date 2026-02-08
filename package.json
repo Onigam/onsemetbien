@@ -5,8 +5,10 @@
   "private": true,
   "scripts": {
     "dev:radio": "pnpm --filter webradio dev",
+    "dev:radio:client": "pnpm --filter webradio dev:client",
     "dev:backoffice": "pnpm --filter backoffice dev",
-    "build": "pnpm -r build",
+    "build": "pnpm --filter shared build && pnpm --filter webradio build",
+    "build:shared": "pnpm --filter shared build",
     "start:radio": "pnpm --filter webradio start",
     "start:backoffice": "pnpm --filter backoffice start",
     "dl:music": "pnpm --filter tools dl music",

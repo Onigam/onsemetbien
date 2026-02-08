@@ -1,0 +1,50 @@
+.equalizer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 30px 0;
+    height: 60px;
+}
+
+.bar {
+    width: 16px;
+    height: 30px;
+    background-color: var(--neo-green);
+    border: 3px solid var(--neo-black);
+    box-shadow: 2px 2px 0 var(--neo-black);
+}
+
+.playing .bar {
+    animation: bounce 0.3s infinite alternate;
+}
+
+.playing .bar:nth-child(2) {
+    animation-delay: 0.1s;
+    animation-duration: 0.6s;
+}
+
+.playing .bar:nth-child(3) {
+    animation-delay: 0.2s;
+    animation-duration: 0.4s;
+}
+
+.playing .bar:nth-child(4) {
+    animation-delay: 0.3s;
+    animation-duration: 0.7s;
+}
+
+.playing .bar:nth-child(5) {
+    animation-delay: 0.4s;
+    animation-duration: 0.5s;
+}
+
+@keyframes bounce {
+    from {
+        transform: scaleY(0.5);
+    }
+
+    to {
+        transform: scaleY(1.5);
+    }
+}

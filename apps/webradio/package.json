@@ -5,21 +5,27 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "npx ts-node src/server.ts",
+    "dev:client": "vite",
     "start": "node dist/server.js",
-    "build": "tsc"
+    "build": "tsc && vite build",
+    "build:server": "tsc",
+    "build:client": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@onsemetbien/shared": "workspace:*",
     "@aws-sdk/client-s3": "^3.738.0",
     "@aws-sdk/s3-request-presigner": "^3.738.0",
+    "@onsemetbien/shared": "workspace:*",
     "@types/express": "^5.0.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^5.4.19"
   }
 }

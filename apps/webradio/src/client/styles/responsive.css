@@ -1,0 +1,54 @@
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .logo-img {
+        width: 60px;
+        height: 60px;
+        margin: 15px 0 0 0;
+    }
+
+    header>div {
+        flex-direction: column !important;
+    }
+
+    #now-playing {
+        font-size: 1.2em;
+    }
+
+    .bar {
+        width: 12px;
+        height: 25px;
+    }
+
+    .equalizer {
+        height: 50px;
+    }
+
+    #custom-player {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .play-pause-btn {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+    }
+
+    .volume-container {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .volume-bar-container {
+        flex: 1;
+        max-width: 150px;
+    }
+}

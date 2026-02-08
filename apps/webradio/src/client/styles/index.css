@@ -1,0 +1,7 @@
+@import './variables.css';
+@import './base.css';
+@import './header.css';
+@import './player-info.css';
+@import './equalizer.css';
+@import './audio-player.css';
+@import './responsive.css';

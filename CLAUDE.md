@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**On se met bien** is a French web radio station streaming curated audio content (music, comedy excerpts, sketches) with a Windows 95 neobrutalist aesthetic. It features real-time listening with Socket.IO, skip voting, and cloud-based audio storage on OVH S3.
+**On se met bien** is a French web radio station streaming curated audio content (music, comedy excerpts, sketches) with a colorful neobrutalist design. It features real-time listening with Socket.IO, skip voting, and cloud-based audio storage on OVH S3.
 
 **Key Technology**: Express.js, Socket.IO, TypeScript, MongoDB (Mongoose), AWS S3 (OVH), pnpm monorepo.
 
@@ -66,7 +66,7 @@ This is a **pnpm monorepo** with workspace packages:
 ```
 onsemetbien/
 ├── public/                    # Frontend static assets (index.html)
-│   ├── index.html             # Main player interface (Win95 neobrutalist)
+│   ├── index.html             # Main player interface (neobrutalist)
 │   └── logo.png               # Radio logo
 ├── src/                       # Main server source
 │   ├── server.ts              # Express + Socket.IO server
@@ -123,17 +123,19 @@ The server (`src/server.ts`) is an Express.js app with Socket.IO:
 ### Frontend Architecture
 
 Currently a **single `index.html` file** in `public/` with:
-- Inline CSS (Windows 95 neobrutalist theme)
+- Inline CSS (neobrutalist theme)
 - Inline JavaScript (Socket.IO client, audio player controls)
-- HTML5 `<audio>` element for playback
+- Custom audio player with full controls
 - Animated equalizer bars
 - Skip vote UI
 
 **Design System**:
-- Windows 95 aesthetic (beveled borders, grey backgrounds, blue title bars)
-- CSS variables for theming (`--win95-grey`, `--win95-blue`, etc.)
-- MS Sans Serif / Segoe UI fonts
-- Neobrutalist elements (thick borders, shadow effects)
+- Neobrutalist aesthetic: thick black borders, bold colors, flat panels
+- Color palette: light beige background (`#e8e0d0`), cyan panels (`#00e5ff`), purple accents (`#c39bd3`), orange/red buttons, green progress bars
+- Bold sans-serif typography (uppercase headings)
+- Parrot mascot with sunglasses as logo
+- CSS variables for theming
+- Custom-built audio player (play/pause, progress bar, volume, time display)
 
 ## Important Development Patterns
 

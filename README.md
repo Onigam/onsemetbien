@@ -4,7 +4,7 @@ A TypeScript-based web radio system for "On se met bien", a French web radio sta
 
 ![On se met bien Screenshot](public/screenshot.png)
 
-Visit our website: [On se met bien](https://www.onsemetbien.net/)
+Visit the webradio: [On se met bien](https://www.onsemetbien.net/)
 
 ## Contributing
 

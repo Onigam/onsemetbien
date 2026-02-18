@@ -238,8 +238,8 @@ io.on('connection', async (socket) => {
   });
 });
 
-// Serve the Vite-built client in production, fall back to public/ for legacy
-const clientDistPath = path.join(__dirname, '..', 'client');
+// Serve the Vite-built client (dist/client/ when compiled, src/client/ in dev)
+const clientDistPath = path.join(__dirname, 'client');
 app.use(express.static(clientDistPath));
 app.use(express.static('public'));
 

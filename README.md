@@ -1,6 +1,6 @@
-# On se met bien - Web Radio System
+# On se met bien - 🇫🇷 French Web Radio
 
-A TypeScript-based web radio system for "On se met bien", a French web radio station. This project handles music management, cloud storage, and live streaming with automatic track scheduling.
+A TypeScript-based web radio system for "On se met bien", a French web radio station streaming curated audio content — music, comedy excerpts, and sketches — with a colorful neobrutalist design and real-time listener experience.
 
 ![On se met bien Screenshot](public/screenshot.png)
 
@@ -8,31 +8,36 @@ Visit the webradio: [On se met bien](https://www.onsemetbien.net/)
 
 ## Contributing
 
-See [CONTRIBUTING-ADDING-TRACKS.md](CONTRIBUTING-ADDING-TRACKS.md) for details on how to contribute to this project.
+See [CONTRIBUTING-ADDING-TRACKS.md](CONTRIBUTING-ADDING-TRACKS.md) for details on how to propose tracks.
 
 ## Features
 
-- 🎵 Music Library Management
+- 🎵 **Music Library Management**
   - Download and process YouTube videos into MP3 format
   - Automatic upload to OVH Cloud Storage
-  - Track categorization (music, excerpts, sketches)
+  - Track categorization: music, excerpts, sketches, jingles
   - Metadata management including duration and track types
 
-- 🔄 Intelligent Track Scheduling
+- 🔄 **Intelligent Track Scheduling**
   - Random track selection with type variation
   - Prevents repetitive play of similar content
-  - Automatic track rotation once playlist is completed
+  - Automatic track rotation with history (last 20 tracks excluded)
 
-- 🎧 Live Streaming
-  - Real-time listener count
-  - Secure audio delivery via signed URLs
-  - WebSocket-based real-time updates
-  - Browser-based playback interface
+- 🎧 **Live Streaming**
+  - Real-time synchronized playback — all listeners hear the same track at the same position
+  - Secure audio delivery via signed URLs (OVH S3)
+  - WebSocket-based real-time updates via Socket.IO
+  - Browser-based neobrutalist player interface
+
+- 🗳️ **Skip Voting**
+  - Listeners can vote to skip the current track
+  - 50% of active listeners required to trigger a skip
 
 ## Prerequisites
 
-- Node.js (v14 or higher)
-- MongoDB database
+- Node.js 20+
+- pnpm (package manager)
+- MongoDB (local or cloud)
 - OVH S3-compatible storage account
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [ffmpeg](https://ffmpeg.org/)
@@ -42,17 +47,17 @@ See [CONTRIBUTING-ADDING-TRACKS.md](CONTRIBUTING-ADDING-TRACKS.md) for details o
 1. Clone this repository
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
-3. Create a `.env` file with the following variables:
+3. Create a `.env` file based on `.env.example`:
 ```env
-PORT=3000
-MONGODB_URI=your_mongodb_uri
-OVH_REGION=your_ovh_region
-OVH_BUCKET=your_bucket_name
-OVH_ACCESS_KEY_ID=your_access_key
-OVH_SECRET_ACCESS_KEY=your_secret_key
+PORT=3001
+MONGODB_URI=mongodb://localhost:27017/webradio
+OVH_REGION=eu-west-par
+OVH_BUCKET=your-bucket
+OVH_ACCESS_KEY_ID=your-access-key
+OVH_SECRET_ACCESS_KEY=your-secret-key
 ```
 
 ## Usage
@@ -60,48 +65,57 @@ OVH_SECRET_ACCESS_KEY=your_secret_key
 ### Starting the Radio Server
 
 ```bash
-npm start
+pnpm dev:radio
 ```
 
 ### Adding New Tracks
 
-Add tracks to the radio library using one of these commands:
-
 ```bash
-# For music tracks
-npm run dl:music -- <youtube-url>
+# Download music tracks
+pnpm dl:music
 
-# For radio excerpts
-npm run dl:excerpt -- <youtube-url>
+# Download excerpt tracks
+pnpm dl:excerpt
 
-# For comedy sketches
-npm run dl:sketch -- <youtube-url>
+# Download sketch tracks
+pnpm dl:sketch
+
+# Search YouTube for tracks
+pnpm search:tracks
+
+# Batch upload tracks
+pnpm bulk:upload
 ```
 
 ## Architecture
 
-- **Frontend**: Static HTML/JS served by Express
+```
+onsemetbien/
+├── public/          # Frontend static assets (index.html, logo)
+├── src/             # Main server source (Express + Socket.IO)
+│   ├── server.ts    # Core server
+│   ├── models/      # Mongoose models
+│   ├── services/    # Business logic (storage, track scheduling)
+│   └── scripts/     # Utility scripts
+├── apps/
+│   ├── webradio/    # Web radio server package
+│   └── backoffice/  # Management interface
+├── shared/          # Shared types & models
+└── tools/           # CLI utilities
+```
+
+- **Frontend**: Single-page HTML/JS with neobrutalist design, served by Express
 - **Backend**: Node.js with Express and Socket.IO
 - **Storage**: OVH S3-compatible cloud storage
-- **Database**: MongoDB for track management
-- **Real-time**: Socket.IO for live listener counts and track updates
+- **Database**: MongoDB (Mongoose) for track metadata
+- **Real-time**: Socket.IO for listener counts, track changes, and skip votes
 
-## Technical Details
+## Deployment
 
-- Automatic track type rotation for varied content
-- Secure URL generation for audio files
-- Real-time listener tracking
-- Automatic cleanup of local files after cloud upload
-- Error handling and retry mechanisms
+Deployed on [Railway](https://railway.app/). Docker support available via `docker-compose.yml`.
 
-## Dependencies
-
-- Express.js: Web server framework
-- Socket.IO: Real-time communication
-- MongoDB/Mongoose: Database management
-- AWS SDK: S3 compatible storage operations
-- youtube-dl-exec: YouTube download functionality
-- TypeScript: Type-safe development
+- Health check: `GET /health`
+- Config: `railway.json` and `Procfile`
 
 ## License
 

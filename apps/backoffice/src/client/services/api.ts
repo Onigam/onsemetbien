@@ -72,4 +72,29 @@ export const api = {
     const response = await apiClient.get(`/tracks/${id}/metadata`);
     return response.data;
   },
+
+  async renameTrack(id: string, title: string): Promise<Track> {
+    const response = await apiClient.put(`/tracks/${id}/title`, { title });
+    return response.data;
+  },
+
+  async trimTrack(id: string, startTime: number, duration: number): Promise<Track> {
+    const response = await apiClient.post(`/tracks/${id}/trim`, {
+      startTime,
+      duration,
+    });
+    return response.data.track;
+  },
+
+  async previewTrimmedAudio(
+    id: string,
+    startTime: number,
+    duration: number
+  ): Promise<string> {
+    const response = await apiClient.post(`/tracks/${id}/preview-audio`, {
+      startTime,
+      duration,
+    });
+    return response.data.previewUrl;
+  },
 };

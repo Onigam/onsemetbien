@@ -87,6 +87,130 @@
   cursor: not-allowed;
 }
 
+.rename-group {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rename-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.rename-inline {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.rename-input {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.rename-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.rename-edit-button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background: #fff;
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.rename-edit-button:hover {
+  background: #007bff;
+  color: #fff;
+}
+
+.rename-save-button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #28a745;
+  border-radius: 4px;
+  background: #28a745;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.rename-save-button:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.rename-save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rename-cancel-button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #6c757d;
+  border-radius: 4px;
+  background: #fff;
+  color: #6c757d;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.rename-cancel-button:hover:not(:disabled) {
+  background: #6c757d;
+  color: #fff;
+}
+
+.rename-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rename-label {
+    color: #ccc;
+  }
+
+  .rename-input {
+    background: #333;
+    color: #fff;
+    border-color: #555;
+  }
+
+  .rename-edit-button {
+    background: #333;
+    border-color: #4dabf7;
+    color: #4dabf7;
+  }
+
+  .rename-edit-button:hover {
+    background: #4dabf7;
+    color: #000;
+  }
+
+  .rename-cancel-button {
+    background: #333;
+    color: #aaa;
+    border-color: #666;
+  }
+
+  .rename-cancel-button:hover:not(:disabled) {
+    background: #666;
+    color: #fff;
+  }
+}
+
 .audio-section {
   margin-bottom: 1.5rem;
 }

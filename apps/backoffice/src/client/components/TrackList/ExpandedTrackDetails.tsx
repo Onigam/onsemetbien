@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { VolumeControl } from './VolumeControl';
+import { TrackEditor } from './TrackEditor';
 import { api } from '../../services/api';
 import './ExpandedTrackDetails.css';
 
@@ -26,6 +27,9 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleInput, setTitleInput] = useState(track.title);
+  const [isRenamingTitle, setIsRenamingTitle] = useState(false);
 
   useEffect(() => {
     const fetchAudioUrl = async () => {
@@ -48,6 +52,32 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
     fetchAudioUrl();
   }, [track._id]);
 
+  const handleRename = async () => {
+    if (titleInput.trim() === track.title) {
+      setIsEditingTitle(false);
+      return;
+    }
+    setIsRenamingTitle(true);
+    try {
+      await api.renameTrack(track._id, titleInput);
+      onUpdate();
+      setIsEditingTitle(false);
+    } catch (error) {
+      console.error('Failed to rename track:', error);
+      alert('Failed to rename track');
+    } finally {
+      setIsRenamingTitle(false);
+    }
+  };
+
+  const handleRenameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleRename();
+    if (e.key === 'Escape') {
+      setTitleInput(track.title);
+      setIsEditingTitle(false);
+    }
+  };
+
   const handleVisibilityToggle = async () => {
     setIsUpdatingVisibility(true);
     try {
@@ -59,6 +89,10 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
     } finally {
       setIsUpdatingVisibility(false);
     }
+  };
+
+  const handleTrackUpdate = () => {
+    onUpdate();
   };
 
   return (
@@ -106,6 +140,49 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
                 : 'Hide Track'}
             </button>
           </div>
+          <div className="rename-group">
+            <label className="rename-label">Rename:</label>
+            {isEditingTitle ? (
+              <div className="rename-inline">
+                <input
+                  className="rename-input"
+                  type="text"
+                  value={titleInput}
+                  onChange={(e) => setTitleInput(e.target.value)}
+                  onKeyDown={handleRenameKeyDown}
+                  disabled={isRenamingTitle}
+                  autoFocus
+                />
+                <button
+                  className="rename-save-button"
+                  onClick={handleRename}
+                  disabled={isRenamingTitle || !titleInput.trim()}
+                >
+                  {isRenamingTitle ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                  className="rename-cancel-button"
+                  onClick={() => {
+                    setTitleInput(track.title);
+                    setIsEditingTitle(false);
+                  }}
+                  disabled={isRenamingTitle}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                className="rename-edit-button"
+                onClick={() => {
+                  setTitleInput(track.title);
+                  setIsEditingTitle(true);
+                }}
+              >
+                Edit title
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -124,6 +201,8 @@ export const ExpandedTrackDetails: React.FC<ExpandedTrackDetailsProps> = ({
       </div>
 
       <VolumeControl track={track} onUpdate={onUpdate} />
+
+      <TrackEditor track={track} onUpdate={handleTrackUpdate} />
     </div>
   );
 };

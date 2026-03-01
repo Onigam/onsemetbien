@@ -3,7 +3,8 @@ import { TrackModel, Track, VALID_TRACK_TYPES } from '@onsemetbien/shared';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { volumeService } from '../services/volumeService';
-import { YoutubeDownloadService } from '../services/youtubeDownloadService';
+import {YoutubeDownloadService} from '../services/youtubeDownloadService';
+import { trimService } from '../services/trimService';
 import dotenv from 'dotenv';
 // Load environment variables before other imports
 dotenv.config();
@@ -94,6 +95,31 @@ router.get('/:id', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error fetching track:', error);
     res.status(500).json({ error: 'Failed to fetch track' });
+  }
+});
+
+// PUT /api/tracks/:id/title - Rename a track
+router.put('/:id/title', async (req: Request, res: Response) => {
+  try {
+    const { title } = req.body;
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+
+    const track = await TrackModel.findByIdAndUpdate(
+      req.params.id,
+      { title: title.trim() },
+      { new: true }
+    );
+
+    if (!track) {
+      return res.status(404).json({ error: 'Track not found' });
+    }
+
+    res.json(track);
+  } catch (error) {
+    console.error('Error renaming track:', error);
+    res.status(500).json({ error: 'Failed to rename track' });
   }
 });
 
@@ -212,5 +238,89 @@ router.post('/download', async (req: Request, res: Response) => {
     });
   }
 });
+
+// POST /api/tracks/:id/trim - Trim/crop a track
+router.post('/:id/trim', async (req: Request, res: Response) => {
+  try {
+    const { startTime, duration } = req.body;
+
+    if (!startTime || !duration) {
+      return res.status(400).json({
+        error: 'Start time and duration are required',
+      });
+    }
+
+    if (startTime < 0 || duration <= 0) {
+      return res.status(400).json({
+        error: 'Start time must be >= 0 and duration must be > 0',
+      });
+    }
+
+    const track = await TrackModel.findById(req.params.id);
+    if (!track) {
+      return res.status(404).json({ error: 'Track not found' });
+    }
+
+    const maxDuration = getMaxDurationForType(track.type);
+    if (duration > maxDuration) {
+      return res.status(400).json({
+        error: `Duration (${duration}s) exceeds maximum for ${track.type} type (${maxDuration}s)`,
+      });
+    }
+
+    const updatedTrack = await trimService.trimTrack(track, startTime, duration);
+
+    res.json({
+      message: 'Track trimmed successfully',
+      track: updatedTrack,
+    });
+  } catch (error) {
+    console.error('Error trimming track:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to trim track',
+    });
+  }
+});
+
+// POST /api/tracks/:id/preview-audio - Preview trimmed audio
+router.post('/:id/preview-audio', async (req: Request, res: Response) => {
+  try {
+    const { startTime, duration } = req.body;
+
+    if (!startTime || !duration) {
+      return res.status(400).json({
+        error: 'Start time and duration are required for preview',
+      });
+    }
+
+    const track = await TrackModel.findById(req.params.id);
+    if (!track) {
+      return res.status(404).json({ error: 'Track not found' });
+    }
+
+    const previewUrl = await trimService.previewCroppedTrack(
+      track,
+      startTime,
+      duration
+    );
+
+    res.json({ previewUrl });
+  } catch (error) {
+    console.error('Error generating preview:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to generate preview',
+    });
+  }
+});
+
+function getMaxDurationForType(trackType: string): number {
+  const maxDurations: Record<string, number> = {
+    music: 360,
+    excerpt: 90,
+    sketch: 90,
+    jingle: 20,
+  };
+  return maxDurations[trackType] || 360;
+}
 
 export { router as tracksRouter };

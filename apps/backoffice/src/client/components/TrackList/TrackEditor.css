@@ -1,0 +1,208 @@
+.track-editor {
+  margin-top: 20px;
+}
+
+.editor-container {
+  background: #fff;
+  border: 3px solid #000;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.editor-container h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.editor-section {
+  margin-bottom: 20px;
+}
+
+.time-inputs {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.time-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-group label {
+  font-weight: bold;
+  min-width: 80px;
+}
+
+.time-group input {
+  padding: 8px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  width: 120px;
+  font-size: 14px;
+}
+
+.time-group input:focus {
+  outline: none;
+  border-color: #00e5ff;
+}
+
+.time-group span {
+  color: #666;
+  font-size: 14px;
+}
+
+.duration-summary {
+  display: flex;
+  gap: 30px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #eee;
+}
+
+.duration-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.duration-summary-item .label {
+  color: #666;
+  font-size: 13px;
+}
+
+.duration-summary-item .value {
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  color: #333;
+}
+
+.preview-hint {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.preview-audio {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.preview-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.reset-btn,
+.apply-btn,
+.cancel-btn,
+.preview-btn,
+.stop-btn {
+  padding: 10px 20px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.edit-btn {
+  background: #00e5ff;
+  color: #000;
+}
+
+.edit-btn:hover:not(:disabled) {
+  background: #00d4ea;
+  border-color: #000;
+}
+
+.reset-btn {
+  background: #f0f0f0;
+  color: #000;
+}
+
+.reset-btn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.apply-btn {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.apply-btn:hover:not(:disabled) {
+  background: #ee5a5a;
+}
+
+.cancel-btn {
+  background: #c39bd3;
+  color: #000;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #b38ad3;
+}
+
+.preview-btn,
+.stop-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.preview-btn {
+  background: #ffd93d;
+  color: #000;
+}
+
+.preview-btn:hover:not(:disabled) {
+  background: #ffcd2d;
+}
+
+.stop-btn {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.stop-btn:hover:not(:disabled) {
+  background: #ee5a5a;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.editor-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #ffe0e0;
+  border: 2px solid #ff6b6b;
+  color: #cc0000;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.success-message {
+  background: #e0ffe0;
+  border: 2px solid #00cc00;
+  color: #006600;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}

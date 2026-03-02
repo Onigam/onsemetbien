@@ -244,13 +244,16 @@ router.post('/:id/trim', async (req: Request, res: Response) => {
   try {
     const { startTime, duration } = req.body;
 
-    if (!startTime || !duration) {
+    const startTimeNum = parseFloat(startTime);
+    const durationNum = parseFloat(duration);
+
+    if (!startTimeNum || !durationNum || isNaN(startTimeNum) || isNaN(durationNum)) {
       return res.status(400).json({
         error: 'Start time and duration are required',
       });
     }
 
-    if (startTime < 0 || duration <= 0) {
+    if (startTimeNum < 0 || durationNum <= 0) {
       return res.status(400).json({
         error: 'Start time must be >= 0 and duration must be > 0',
       });
@@ -262,13 +265,13 @@ router.post('/:id/trim', async (req: Request, res: Response) => {
     }
 
     const maxDuration = getMaxDurationForType(track.type);
-    if (duration > maxDuration) {
+    if (durationNum > maxDuration) {
       return res.status(400).json({
-        error: `Duration (${duration}s) exceeds maximum for ${track.type} type (${maxDuration}s)`,
+        error: `Duration (${durationNum}s) exceeds maximum for ${track.type} type (${maxDuration}s)`,
       });
     }
 
-    const updatedTrack = await trimService.trimTrack(track, startTime, duration);
+    const updatedTrack = await trimService.trimTrack(track, startTimeNum, durationNum);
 
     res.json({
       message: 'Track trimmed successfully',
@@ -287,7 +290,10 @@ router.post('/:id/preview-audio', async (req: Request, res: Response) => {
   try {
     const { startTime, duration } = req.body;
 
-    if (!startTime || !duration) {
+    const startTimeNum = parseFloat(startTime);
+    const durationNum = parseFloat(duration);
+
+    if (!startTimeNum || !durationNum || isNaN(startTimeNum) || isNaN(durationNum)) {
       return res.status(400).json({
         error: 'Start time and duration are required for preview',
       });
@@ -300,8 +306,8 @@ router.post('/:id/preview-audio', async (req: Request, res: Response) => {
 
     const previewUrl = await trimService.previewCroppedTrack(
       track,
-      startTime,
-      duration
+      startTimeNum,
+      durationNum
     );
 
     res.json({ previewUrl });
@@ -316,8 +322,8 @@ router.post('/:id/preview-audio', async (req: Request, res: Response) => {
 function getMaxDurationForType(trackType: string): number {
   const maxDurations: Record<string, number> = {
     music: 360,
-    excerpt: 90,
-    sketch: 90,
+    excerpt: 160,
+    sketch: 160,
     jingle: 20,
   };
   return maxDurations[trackType] || 360;

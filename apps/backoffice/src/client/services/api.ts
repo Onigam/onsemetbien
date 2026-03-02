@@ -80,8 +80,8 @@ export const api = {
 
   async trimTrack(id: string, startTime: number, duration: number): Promise<Track> {
     const response = await apiClient.post(`/tracks/${id}/trim`, {
-      startTime,
-      duration,
+      startTime: Number(startTime),
+      duration: Number(duration),
     });
     return response.data.track;
   },
@@ -92,8 +92,8 @@ export const api = {
     duration: number
   ): Promise<string> {
     const response = await apiClient.post(`/tracks/${id}/preview-audio`, {
-      startTime,
-      duration,
+      startTime: Number(startTime),
+      duration: Number(duration),
     });
     return response.data.previewUrl;
   },

@@ -1,37 +1,54 @@
-@media (max-width: 600px) {
+/* ============================================
+   RESPONSIVE — Mobile-first compact layout
+   Desktop (>768px) remains UNTOUCHED.
+   ============================================ */
+
+/* --- Tablet / small desktop (≤768px) --- */
+@media (max-width: 768px) {
     body {
         padding: 15px;
+        max-width: 100%;
+    }
+
+    header {
+        padding: 20px;
+        margin-bottom: 15px;
     }
 
     h1 {
-        font-size: 1.8em;
+        font-size: 2.2em;
+    }
+
+    .tagline {
+        font-size: 1.1em;
     }
 
     .logo-img {
-        width: 100px;
-        height: 100px;
-        margin: 15px 0 0 0;
+        width: 120px;
+        height: 120px;
+        margin: 0;
     }
 
-    header>div {
-        flex-direction: column !important;
+    header > div {
+        flex-direction: row !important;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .equalizer {
+        height: 50px;
+        margin: 0 0 15px 0;
+    }
+
+    #player-info {
+        margin: 15px 0 20px 0;
     }
 
     #now-playing {
         font-size: 1.2em;
     }
 
-    .bar {
-        width: 12px;
-        height: 25px;
-    }
-
-    .equalizer {
-        height: 50px;
-    }
-
     #custom-player {
-        flex-direction: column;
         gap: 15px;
         padding: 15px;
     }
@@ -41,14 +58,246 @@
         height: 70px;
         min-width: 70px;
     }
+}
 
-    .volume-container {
-        width: 100%;
-        justify-content: center;
+/* --- Mobile portrait (≤480px) — main compact rules --- */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        max-width: 100%;
+    }
+
+    /* Header — compact horizontal row */
+    header {
+        padding: 12px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    header::before {
+        display: none;
+    }
+
+    header > div {
+        flex-direction: row !important;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-img {
+        width: 60px;
+        height: 60px;
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    h1 {
+        font-size: 1.4em;
+        letter-spacing: -1px;
+    }
+
+    .tagline {
+        font-size: 0.9em;
+        margin: 4px 0;
+    }
+
+    /* Equalizer — shorter */
+    .equalizer {
+        height: 35px;
+        margin: 8px 0;
+        gap: 4px;
+    }
+
+    .bar {
+        width: 8px;
+        height: 20px;
+    }
+
+    /* Player info panel */
+    #player-info {
+        padding: 12px;
+        margin: 8px 0 10px 0;
+        box-shadow: 3px 3px 0 var(--neo-black);
+    }
+
+    /* Now playing */
+    #now-playing {
+        font-size: 1em;
+        padding: 8px;
+        min-height: 40px;
+        margin-bottom: 8px;
+        box-shadow: 2px 2px 0 var(--neo-black);
+    }
+
+    /* Listeners badge */
+    #listeners {
+        font-size: 0.85em;
+        padding: 6px 12px;
+        box-shadow: 2px 2px 0 var(--neo-black);
+    }
+
+    /* Skip vote — horizontal row */
+    #skip-vote {
+        padding: 8px 12px;
+        margin-top: 8px;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 2px 2px 0 var(--neo-black);
+    }
+
+    #skip-vote button {
+        padding: 8px 16px;
+        font-size: 0.85em;
+        box-shadow: 2px 2px 0 var(--neo-black);
+    }
+
+    #vote-count {
+        font-size: 0.85em;
+        padding: 6px 10px;
+    }
+
+    /* Audio player — compact row */
+    #custom-player {
+        padding: 12px;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-direction: row;
+        box-shadow: 3px 3px 0 var(--neo-black);
+    }
+
+    .play-pause-btn {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        box-shadow: 3px 3px 0 var(--neo-black);
+    }
+
+    .progress-bar-container {
+        height: 24px;
+    }
+
+    .time-display {
+        font-size: 0.8em;
+    }
+
+    .progress-container {
+        gap: 4px;
+    }
+
+    .mute-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        box-shadow: 2px 2px 0 var(--neo-black);
     }
 
     .volume-bar-container {
-        flex: 1;
-        max-width: 150px;
+        width: 70px;
+        height: 24px;
+    }
+
+    .volume-container {
+        gap: 6px;
+    }
+}
+
+/* --- Small phones (≤380px, ≤700px tall) — even more compact --- */
+@media (max-width: 380px) and (max-height: 700px) {
+    body {
+        padding: 8px;
+    }
+
+    header {
+        padding: 10px;
+        margin-bottom: 6px;
+    }
+
+    .logo-img {
+        width: 48px;
+        height: 48px;
+    }
+
+    h1 {
+        font-size: 1.2em;
+    }
+
+    .tagline {
+        font-size: 0.8em;
+        margin: 2px 0;
+    }
+
+    .equalizer {
+        height: 28px;
+        margin: 6px 0;
+    }
+
+    .bar {
+        width: 6px;
+        height: 16px;
+    }
+
+    #player-info {
+        padding: 8px;
+        margin: 6px 0 8px 0;
+    }
+
+    #now-playing {
+        font-size: 0.9em;
+        padding: 6px;
+        min-height: 34px;
+        margin-bottom: 6px;
+    }
+
+    #listeners {
+        font-size: 0.8em;
+        padding: 4px 10px;
+    }
+
+    #skip-vote {
+        padding: 6px 10px;
+        margin-top: 6px;
+        gap: 6px;
+    }
+
+    #skip-vote button {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    #vote-count {
+        font-size: 0.8em;
+        padding: 4px 8px;
+    }
+
+    #custom-player {
+        padding: 10px;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .play-pause-btn {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+    }
+
+    .progress-bar-container {
+        height: 20px;
+    }
+
+    .time-display {
+        font-size: 0.75em;
+    }
+
+    .mute-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .volume-bar-container {
+        width: 60px;
+        height: 20px;
     }
 }

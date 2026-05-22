@@ -26,11 +26,55 @@ const s3Client = new S3Client({
 
 let currentTrack: any = null;
 let listeners = 0;
-let playedTracks: string[] = []; // Change to an array to keep track of last 20 played tracks by ID
-let lastPlayedType: TrackType | null = null; // Keep track of last played type
-let currentTrackStartTime: number = Date.now(); // Add this line to track when the current track started
-let skipVotes = new Set<string>(); // Track votes to skip current track
+let lastPlayedType: TrackType | null = null;
+let lastPlayedTrackId: string | null = null;
+let currentTrackStartTime: number = Date.now();
+let skipVotes = new Set<string>();
 let currentTrackTimeout: NodeJS.Timeout | null = null;
+
+// Shuffled deck per track type. Each deck holds the remaining track IDs to play
+// for that type. When a deck empties, it is reshuffled from the DB. This
+// guarantees every track of a type plays once before any repeat.
+const decks: Record<TrackType, string[]> = {
+  music: [],
+  excerpt: [],
+  sketch: [],
+  jingle: [],
+};
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function refillDeck(type: TrackType): Promise<void> {
+  const tracks = await TrackModel.find({ type, hidden: { $ne: true } })
+    .select('_id')
+    .lean();
+  const ids = tracks.map((t) => t._id.toString());
+  decks[type] = shuffle(ids);
+  console.log(`Refilled ${type} deck with ${decks[type].length} tracks`);
+}
+
+async function drawFromDeck(type: TrackType): Promise<string | null> {
+  if (decks[type].length === 0) {
+    await refillDeck(type);
+  }
+  if (decks[type].length === 0) return null;
+
+  // Avoid handing back the exact track that just played (only matters if the
+  // deck just got refilled and the first card is the last track we played).
+  let id = decks[type].shift()!;
+  if (id === lastPlayedTrackId && decks[type].length > 0) {
+    decks[type].push(id);
+    id = decks[type].shift()!;
+  }
+  return id;
+}
 
 async function getSignedS3Url(key: string) {
   // Remove any full URL if it exists, we just want the filename
@@ -49,72 +93,65 @@ async function getSignedS3Url(key: string) {
   return url;
 }
 
+async function pickNextType(): Promise<TrackType | null> {
+  // Prefer music after a non-music track; otherwise pick any type that isn't
+  // the same as the last one. Falls back to whatever has tracks available.
+  const typesWithTracks: TrackType[] = [];
+  for (const type of ['music', 'excerpt', 'sketch', 'jingle'] as TrackType[]) {
+    if (decks[type].length > 0) {
+      typesWithTracks.push(type);
+      continue;
+    }
+    const count = await TrackModel.countDocuments({ type, hidden: { $ne: true } });
+    if (count > 0) typesWithTracks.push(type);
+  }
+
+  if (typesWithTracks.length === 0) return null;
+
+  if (lastPlayedType && lastPlayedType !== 'music' && typesWithTracks.includes('music')) {
+    return 'music';
+  }
+
+  const candidates = typesWithTracks.filter((t) => t !== lastPlayedType);
+  const pool = candidates.length > 0 ? candidates : typesWithTracks;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 async function getNextTrack() {
   try {
-    // Get all tracks except those already played (unless all tracks have been played)
-    const unplayedTracksCount = await TrackModel.countDocuments({
-      _id: { $nin: playedTracks },
-      hidden: { $ne: true },
-    });
+    const type = await pickNextType();
+    if (!type) throw new Error('No tracks available to play');
 
-    // Build the query
-    const query: any = {
-      _id: { $nin: playedTracks },
-      hidden: { $ne: true },
-    };
-
-    // Don't play same type as last track if possible
-    if (lastPlayedType) {
-      // Check if we have any tracks of different type
-      const differentTypeCount = await TrackModel.countDocuments({
-        ...query,
-        type: { $ne: lastPlayedType },
+    let id: string | null = null;
+    // Try up to 2 times: deck may be stale (track deleted/hidden since shuffle).
+    for (let attempt = 0; attempt < 2 && !id; attempt++) {
+      const candidateId = await drawFromDeck(type);
+      if (!candidateId) break;
+      const exists = await TrackModel.exists({
+        _id: candidateId,
+        hidden: { $ne: true },
       });
-
-      if (differentTypeCount > 0) {
-        query.type = { $ne: lastPlayedType };
-      }
-
-      // Ensure the next track is a music if the last played type is not music
-      if (lastPlayedType !== 'music') {
-        const musicCount = await TrackModel.countDocuments({
-          ...query,
-          type: 'music',
-        });
-
-        if (musicCount > 0) {
-          query.type = 'music';
-        }
+      if (exists) {
+        id = candidateId;
+      } else {
+        // Stale entry; force a refill next loop.
+        decks[type] = [];
       }
     }
 
-    // Get count of available tracks
-    const count = await TrackModel.countDocuments(query);
-    if (count === 0) {
-      throw new Error('No tracks available to play');
-    }
+    if (!id) throw new Error(`No playable track in ${type} deck`);
 
-    // Get random track from filtered selection, explicitly selecting all fields
-    const random = Math.floor(Math.random() * count);
-    const track = await TrackModel.findOne(query)
+    const track = await TrackModel.findById(id)
       .select('title url duration type _id')
-      .skip(random);
+      .lean();
 
-    if (!track) {
-      throw new Error('Failed to get next track');
-    }
+    if (!track) throw new Error('Failed to load next track');
 
-    // Update tracking variables
-    playedTracks.push(track._id.toString());
-    if (playedTracks.length > 20) {
-      playedTracks.shift(); // Remove the oldest track ID if we have more than 20
-    }
     lastPlayedType = track.type as TrackType;
+    lastPlayedTrackId = track._id.toString();
 
     console.log(`Selected track: ${track.title} (${track.type})`);
-    console.log(`Track duration: ${track.duration} seconds`);
-    console.log(`Played tracks count: ${playedTracks.length}`);
-    console.log(`Last played type: ${lastPlayedType}`);
+    console.log(`Remaining in ${type} deck: ${decks[type].length}`);
 
     return track;
   } catch (error) {

@@ -152,7 +152,11 @@ function attach(el: HTMLAudioElement): AnalyserNode | null {
     const source = ctx.createMediaElementSource(el);
     const an = ctx.createAnalyser();
     an.fftSize = 1024; // 512 bins — enough resolution for log-spaced bands
-    an.smoothingTimeConstant = 0.7; // a bit snappier so vocals/transients show
+    an.smoothingTimeConstant = 0.6; // snappy enough to catch arpeggio notes
+    // Tighter dynamic window than the defaults (-100..-30 dB) so quieter
+    // melodic content (arpeggios, plucks) lifts off the floor and is visible.
+    an.minDecibels = -95;
+    an.maxDecibels = -40;
     source.connect(an);
     an.connect(ctx.destination);
     sourceNodes.set(el, source);
@@ -206,9 +210,12 @@ export function getFrequencyLevels(barCount: number): number[] | null {
       if (v > peak) peak = v;
     }
     const count = end - start;
-    const level = (sum / count) * 0.5 + peak * 0.5; // 0..255
+    // Peak-weighted: an arpeggio note is a short spike in its band that a
+    // plain average would drown under a sustained pad — the peak catches it.
+    const level = (sum / count) * 0.35 + peak * 0.65; // 0..255
     const tilt = 1 + 2.2 * (i / (barCount - 1)); // bass 1x → treble ~3.2x
-    const val = Math.min(1, Math.pow(level / 255, 0.9) * tilt);
+    // Gamma < 1 lifts mid/low levels so quieter melodic lines stay visible.
+    const val = Math.min(1, Math.pow(level / 255, 0.75) * tilt);
     out[i] = val;
     energy += val;
   }

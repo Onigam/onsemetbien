@@ -207,7 +207,7 @@ export function getFrequencyLevels(barCount: number): number[] | null {
     }
     const count = end - start;
     const level = (sum / count) * 0.5 + peak * 0.5; // 0..255
-    const tilt = 1 + 1.4 * (i / (barCount - 1)); // bass 1x → treble ~2.4x
+    const tilt = 1 + 2.2 * (i / (barCount - 1)); // bass 1x → treble ~3.2x
     const val = Math.min(1, Math.pow(level / 255, 0.9) * tilt);
     out[i] = val;
     energy += val;

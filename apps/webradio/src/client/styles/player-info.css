@@ -15,12 +15,78 @@
     background: var(--neo-white);
     border: 4px solid var(--neo-black);
     box-shadow: 3px 3px 0 var(--neo-black);
-    word-wrap: break-word;
-    min-height: 50px;
+    /* Fixed single-line height: a long title scrolls instead of wrapping,
+       so the panel height never jumps. */
+    height: 50px;
     display: flex;
     align-items: center;
+    overflow: hidden;
+}
+
+/* Marquee scaffolding — the viewport clips, the marquee carries two copies. */
+.np-viewport {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
     justify-content: center;
-    text-align: center;
+}
+
+.np-marquee {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.np-text {
+    white-space: nowrap;
+}
+
+/* Trailing copy only exists while scrolling; the gap sits before it. */
+.np-text--dup {
+    display: none;
+    padding-left: var(--np-gap, 56px);
+}
+
+/* Scrolling state: left-align and animate the seamless loop. */
+#now-playing.is-scrolling .np-viewport {
+    justify-content: flex-start;
+}
+
+#now-playing.is-scrolling .np-text--dup {
+    display: inline;
+}
+
+#now-playing.is-scrolling .np-marquee {
+    will-change: transform;
+    animation: np-scroll linear infinite;
+}
+
+@keyframes np-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-1 * var(--np-distance, 100%)));
+    }
+}
+
+/* Respect users who prefer no motion: keep it static (clipped) rather than
+   scrolling endlessly. */
+@media (prefers-reduced-motion: reduce) {
+    #now-playing.is-scrolling .np-viewport {
+        justify-content: center;
+    }
+
+    #now-playing.is-scrolling .np-text--dup {
+        display: none;
+    }
+
+    #now-playing.is-scrolling .np-marquee {
+        animation: none;
+    }
 }
 
 #listeners {
@@ -35,14 +101,17 @@
 
 #skip-vote {
     margin-top: 15px;
-    padding: 15px;
+    padding: 12px 15px;
     background: var(--neo-purple);
     border: 4px solid var(--neo-black);
     box-shadow: 3px 3px 0 var(--neo-black);
+    /* Button + vote counter share one row to save vertical space. */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 #skip-vote button {

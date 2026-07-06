@@ -25,6 +25,9 @@ See [CONTRIBUTING-ADDING-TRACKS.md](CONTRIBUTING-ADDING-TRACKS.md) for details o
 
 - 🎧 **Live Streaming**
   - Real-time synchronized playback — all listeners hear the same track at the same position
+  - Gapless playback: the next track is pre-buffered and crossfaded in, so audio is never cut between tracks
+  - "À suivre" panel showing the next 5 upcoming tracks
+  - Audio-reactive equalizer (Web Audio spectrum, Winamp-style) with a synthesized fallback
   - Secure audio delivery via signed URLs (OVH S3)
   - WebSocket-based real-time updates via Socket.IO
   - Browser-based neobrutalist player interface
@@ -67,6 +70,58 @@ OVH_SECRET_ACCESS_KEY=your-secret-key
 ```bash
 pnpm dev:radio
 ```
+
+This runs the Express/Socket.IO server (`:3001`) **and** the Vite dev server (`:5173`)
+concurrently. In development, open **http://localhost:5173** — Vite serves and transpiles
+the TypeScript client and proxies `/socket.io` and `/health` to the server on `:3001`.
+(The server on `:3001` serves the already-built client only in production.)
+
+### Audio-reactive equalizer (OVH S3 CORS)
+
+The equalizer reacts to the real audio signal via the Web Audio API. Because audio is
+served cross-origin from OVH S3, the browser only exposes the signal to the analyser when
+the bucket returns **CORS** headers. Without CORS everything still works — playback is
+untouched and the equalizer falls back to a synthesized animation — but to enable the real
+spectrum, allow the site origins on the bucket.
+
+Create `cors.json`:
+
+```json
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": [
+        "https://onsemetbien.net",
+        "https://www.onsemetbien.net",
+        "http://localhost:*",
+        "https://localhost:*",
+        "http://127.0.0.1:*"
+      ],
+      "AllowedMethods": ["GET", "HEAD"],
+      "AllowedHeaders": ["*"],
+      "ExposeHeaders": ["Content-Length", "Content-Range", "Accept-Ranges", "ETag"],
+      "MaxAgeSeconds": 3600
+    }
+  ]
+}
+```
+
+Apply it with the AWS CLI against the OVH S3 endpoint
+([OVH S3 endpoints & regions](https://docs.ovhcloud.com/fr/guides/storage-and-backup/object-storage/s3-location)):
+
+```bash
+aws s3api put-bucket-cors \
+  --bucket "$OVH_BUCKET" \
+  --cors-configuration file://cors.json \
+  --endpoint-url "https://s3.$OVH_REGION.io.cloud.ovh.net"
+
+# verify
+aws s3api get-bucket-cors --bucket "$OVH_BUCKET" \
+  --endpoint-url "https://s3.$OVH_REGION.io.cloud.ovh.net"
+```
+
+`http://localhost:*` uses the S3 port wildcard, so any localhost port is allowed. It is a
+bucket-level setting and takes effect immediately (no redeploy).
 
 ### Adding New Tracks
 

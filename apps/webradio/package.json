@@ -4,13 +4,16 @@
   "description": "On se met bien - Web Radio Server",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "npx ts-node src/server.ts",
+    "dev": "concurrently -k -n server,client -c blue,green \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "ts-node src/server.ts",
     "dev:client": "vite",
     "start": "node dist/server.js",
     "build": "tsc && vite build",
     "build:server": "tsc",
     "build:client": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.738.0",
@@ -24,8 +27,10 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
+    "concurrently": "^8.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vite": "^5.4.19"
+    "vite": "^5.4.19",
+    "vitest": "^2.1.9"
   }
 }

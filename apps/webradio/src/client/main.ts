@@ -111,6 +111,10 @@ audioService.onDurationChange(() => {
 
 // Handle first-click autoplay
 document.body.addEventListener('click', (e) => {
+  // Any gesture resumes the AudioContext (autoplay policy) for the spectrum
+  // analyser — do this even for clicks on the player controls.
+  audioService.resumeAnalyser();
+
   const target = e.target as HTMLElement;
   if (target.closest('#custom-player')) {
     return;

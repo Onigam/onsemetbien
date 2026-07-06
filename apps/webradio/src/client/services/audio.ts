@@ -70,6 +70,132 @@ function unbindListeners(el: HTMLAudioElement): void {
 // equalizer wiring in main.ts always reflects the audible track.
 bindListeners(active);
 
+// --- Optional Web Audio spectrum analysis --------------------------------
+// The equalizer can react to the real audio signal, but the Web Audio API
+// only yields data for a cross-origin source when that source sends CORS
+// headers (the OVH S3 bucket must allow the site origin). We probe the first
+// URL: if CORS is available we route the elements through an AnalyserNode;
+// otherwise playback is left completely untouched and the equalizer falls back
+// to a synthesized animation. Audio is never sacrificed for the visualization.
+let audioCtx: AudioContext | null = null;
+let analyserEnabled = false;
+let corsProbed = false;
+let freqData: Uint8Array | null = null;
+const analyserNodes = new WeakMap<HTMLAudioElement, AnalyserNode>();
+const sourceNodes = new WeakMap<HTMLAudioElement, MediaElementAudioSourceNode>();
+const corsLoaded = new WeakSet<HTMLAudioElement>();
+
+function ensureContext(): AudioContext | null {
+  if (audioCtx) return audioCtx;
+  const Ctor =
+    window.AudioContext ||
+    (window as unknown as { webkitAudioContext?: typeof AudioContext })
+      .webkitAudioContext;
+  if (!Ctor) return null;
+  try {
+    audioCtx = new Ctor();
+  } catch {
+    audioCtx = null;
+  }
+  return audioCtx;
+}
+
+// Resume the AudioContext from a user gesture (browser autoplay policy).
+export function resumeAnalyser(): void {
+  const ctx = ensureContext();
+  if (ctx && ctx.state !== 'running') {
+    ctx.resume().catch(() => {});
+  }
+}
+
+async function probeCors(url: string): Promise<boolean> {
+  try {
+    const controller = new AbortController();
+    const res = await fetch(url, { mode: 'cors', signal: controller.signal });
+    controller.abort(); // headers are enough — don't download the body
+    return res.type === 'cors' || res.ok;
+  } catch {
+    return false;
+  }
+}
+
+function maybeEnableAnalysis(url: string): void {
+  if (corsProbed) return;
+  corsProbed = true;
+  probeCors(url).then((ok) => {
+    if (!ok) return; // keep plain playback + synthesized equalizer
+    analyserEnabled = true;
+    // Loads from now on are fetched with CORS so the analyser sees real data.
+    active.crossOrigin = 'anonymous';
+    standby.crossOrigin = 'anonymous';
+  });
+}
+
+// Track which element's *current* media was fetched with CORS, so we only ever
+// analyse a safe (untainted) element.
+function markSrc(el: HTMLAudioElement): void {
+  if (analyserEnabled) corsLoaded.add(el);
+  else corsLoaded.delete(el);
+}
+
+// Route an element through the analyser once (permanent). Only when the
+// context is actually running, so we never silence a suspended graph.
+function attach(el: HTMLAudioElement): AnalyserNode | null {
+  const existing = analyserNodes.get(el);
+  if (existing) return existing;
+  const ctx = ensureContext();
+  if (!ctx || ctx.state !== 'running') {
+    if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+    return null;
+  }
+  try {
+    const source = ctx.createMediaElementSource(el);
+    const an = ctx.createAnalyser();
+    an.fftSize = 128; // 64 frequency bins
+    an.smoothingTimeConstant = 0.82;
+    source.connect(an);
+    an.connect(ctx.destination);
+    sourceNodes.set(el, source);
+    analyserNodes.set(el, an);
+    if (!freqData) freqData = new Uint8Array(an.frequencyBinCount);
+    return an;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Frequency levels (0..1) for `barCount` bars from the ACTIVE element, or null
+ * when real analysis isn't available (no CORS, context not running, or the
+ * current track wasn't CORS-loaded). Callers fall back gracefully.
+ */
+export function getFrequencyLevels(barCount: number): number[] | null {
+  if (!analyserEnabled || !corsLoaded.has(active)) return null;
+  const ctx = audioCtx;
+  if (!ctx || ctx.state !== 'running') return null;
+  const an = attach(active);
+  if (!an || !freqData) return null;
+
+  an.getByteFrequencyData(freqData);
+  const usable = Math.floor(freqData.length * 0.8); // ignore the very top bins
+  const size = usable / barCount;
+  const out: number[] = new Array(barCount);
+  let energy = 0;
+  for (let i = 0; i < barCount; i++) {
+    const start = Math.floor(i * size);
+    const end = Math.max(start + 1, Math.floor((i + 1) * size));
+    let sum = 0;
+    for (let j = start; j < end && j < freqData.length; j++) {
+      sum += freqData[j] ?? 0;
+    }
+    const avg = sum / (end - start) / 255;
+    energy += avg;
+    out[i] = Math.min(1, Math.pow(avg, 0.85) * 1.25);
+  }
+  // Flat-zero means a tainted stream slipped through → let the synth take over.
+  return energy > 0.001 ? out : null;
+}
+
 function targetVolume(): number {
   return userMuted ? 0 : userVolume;
 }
@@ -156,8 +282,10 @@ export function togglePlayPause(): void {
 }
 
 export function setSource(url: string): void {
+  maybeEnableAnalysis(url);
   active.src = url;
   active.load();
+  markSrc(active);
 }
 
 // Pre-buffer `url` into the standby element so a later switch is gapless.
@@ -165,21 +293,28 @@ export function preload(url: string): void {
   if (preloadedUrl === url && standby.src) {
     return;
   }
+  maybeEnableAnalysis(url);
   preloadedUrl = url;
   standby.src = url;
   standby.volume = 0;
   standby.load();
+  markSrc(standby);
 }
 
 // Switch to `url`. If it matches the preloaded standby, swap + crossfade for a
 // gapless transition. Otherwise fall back to loading it on the active element.
 export function playPreloadedOrSet(url: string): void {
+  maybeEnableAnalysis(url);
   const wasPlaying = document.body.classList.contains('user-interacted') && !active.paused;
 
   if (preloadedUrl === url && standby.src) {
     const outgoing = active;
     swapElements();
     preloadedUrl = null;
+
+    // The new active carries the pre-buffered next track; if it was CORS-loaded
+    // route it through the analyser now (before playing) for a real spectrum.
+    if (analyserEnabled && corsLoaded.has(active)) attach(active);
 
     // New active is the pre-buffered standby: start it immediately.
     active.currentTime = 0;

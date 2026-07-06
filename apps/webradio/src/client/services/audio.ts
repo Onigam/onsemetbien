@@ -77,6 +77,14 @@ bindListeners(active);
 // URL: if CORS is available we route the elements through an AnalyserNode;
 // otherwise playback is left completely untouched and the equalizer falls back
 // to a synthesized animation. Audio is never sacrificed for the visualization.
+// Spectrum tuning knobs — tweak to taste.
+const SPECTRUM_MIN_DB = -90; // noise floor of the visible range
+const SPECTRUM_MAX_DB = -28; // ceiling; higher = more headroom, bars saturate less
+const SPECTRUM_GAMMA = 0.85; // <1 lifts quiet content; closer to 1 = more contrast/movement
+const SPECTRUM_PEAK_MIX = 0.5; // share of per-band peak vs average (higher = snappier, stickier)
+const SPECTRUM_BASS_GAIN = 0.45; // extra low-end emphasis
+const SPECTRUM_TREBLE_GAIN = 0.8; // extra high-end emphasis
+
 let audioCtx: AudioContext | null = null;
 let analyserEnabled = false;
 let corsProbed = false;
@@ -181,10 +189,8 @@ function attach(el: HTMLAudioElement): AnalyserNode | null {
     const an = ctx.createAnalyser();
     an.fftSize = 1024; // 512 bins — enough resolution for log-spaced bands
     an.smoothingTimeConstant = 0.6; // snappy enough to catch arpeggio notes
-    // Tighter dynamic window than the defaults (-100..-30 dB) so quieter
-    // melodic content (arpeggios, plucks) lifts off the floor and is visible.
-    an.minDecibels = -95;
-    an.maxDecibels = -40;
+    an.minDecibels = SPECTRUM_MIN_DB;
+    an.maxDecibels = SPECTRUM_MAX_DB;
     source.connect(an);
     an.connect(ctx.destination);
     sourceNodes.set(el, source);
@@ -238,15 +244,15 @@ export function getFrequencyLevels(barCount: number): number[] | null {
       if (v > peak) peak = v;
     }
     const count = end - start;
-    // Peak-weighted: an arpeggio note is a short spike in its band that a
-    // plain average would drown under a sustained pad — the peak catches it.
-    const level = (sum / count) * 0.35 + peak * 0.65; // 0..255
-    // "Smile" curve: boost both the bass and the treble (dip the mids), so the
-    // low end / instrumental stays punchy while vocals & arpeggios still show.
+    // Blend average + per-band peak (peak catches short arpeggio-note spikes).
+    const level =
+      (sum / count) * (1 - SPECTRUM_PEAK_MIX) + peak * SPECTRUM_PEAK_MIX; // 0..255
+    // Gentle "smile" curve: a little extra on the bass and the treble, dipping
+    // the mids — kept light so bars keep headroom to move instead of pinning.
     const p = i / (barCount - 1); // 0 = bass, 1 = treble
-    const gain = 1 + 1.2 * p + 0.9 * Math.pow(1 - p, 3); // bass ~1.9, treble ~2.2
-    // Gamma < 1 lifts mid/low levels so quieter melodic lines stay visible.
-    const val = Math.min(1, Math.pow(level / 255, 0.75) * gain);
+    const gain =
+      1 + SPECTRUM_TREBLE_GAIN * p + SPECTRUM_BASS_GAIN * Math.pow(1 - p, 3);
+    const val = Math.min(1, Math.pow(level / 255, SPECTRUM_GAMMA) * gain);
     out[i] = val;
     energy += val;
   }

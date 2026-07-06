@@ -8,22 +8,6 @@ export interface EqualizerComponent {
 const BAR_COUNT = 16;
 const REST_LEVEL = 0.08; // idle bar height (fraction of full height)
 
-// Synthesized, audio-agnostic levels used when we can't read the real signal
-// (no CORS on the audio source). Overlapping sines give a lively, spectrum-like
-// motion with more energy in the middle bars.
-function synthLevels(count: number, tSec: number): number[] {
-  const out: number[] = new Array(count);
-  for (let i = 0; i < count; i++) {
-    const a = Math.sin(tSec * 3.0 + i * 0.55);
-    const b = Math.sin(tSec * 5.3 + i * 1.7);
-    const center = 1 - Math.abs(i / (count - 1) - 0.5) * 1.4; // peak in the middle
-    let v = 0.5 + 0.32 * a + 0.16 * b;
-    v *= 0.55 + 0.45 * Math.max(0, center);
-    out[i] = Math.min(1, Math.max(0.06, v));
-  }
-  return out;
-}
-
 export function createEqualizer(): EqualizerComponent {
   const el = document.createElement('div');
   el.className = 'equalizer';
@@ -59,8 +43,9 @@ export function createEqualizer(): EqualizerComponent {
       el.classList.add('is-live');
       paint(real);
     } else {
+      // No real spectrum available: keep the bars idle (no fake animation).
       el.classList.remove('is-live');
-      paint(synthLevels(BAR_COUNT, performance.now() / 1000));
+      rest();
     }
     rafId = requestAnimationFrame(frame);
   }

@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { TrackRow } from '../TrackList/TrackRow';
+import { TRACK_TYPES, TrackTypeMeta } from '../../constants/trackTypes';
+import type { Track } from '../../types';
 import './AddTrackDialog.css';
-
-interface Track {
-  _id: string;
-  title: string;
-  url: string;
-  duration?: number;
-  createdAt: string;
-  type: string;
-  sourceUrl?: string;
-  hidden?: boolean;
-}
 
 interface DownloadProgress {
   step: string;
@@ -27,11 +18,8 @@ interface AddTrackDialogProps {
   onTrackAdded: () => void;
 }
 
-const TRACK_TYPES = [
-  { value: 'music', label: 'Music' },
-  { value: 'excerpt', label: 'Excerpt' },
-  { value: 'sketch', label: 'Sketch' },
-];
+// YouTube download supports everything except jingles.
+const DOWNLOADABLE_TYPES = TRACK_TYPES.filter((t) => t !== 'jingle');
 
 export const AddTrackDialog: React.FC<AddTrackDialogProps> = ({
   isOpen,
@@ -148,9 +136,10 @@ export const AddTrackDialog: React.FC<AddTrackDialogProps> = ({
           {!isProcessing && !completedTrack && (
             <form onSubmit={handleSubmit} className="add-track-form">
               <div className="form-group">
-                <label htmlFor="youtube-url">YouTube URL:</label>
+                <label htmlFor="youtube-url">YouTube URL</label>
                 <input
                   id="youtube-url"
+                  className="neo-input"
                   type="url"
                   value={youtubeUrl}
                   onChange={(e) => setYoutubeUrl(e.target.value)}
@@ -160,25 +149,30 @@ export const AddTrackDialog: React.FC<AddTrackDialogProps> = ({
               </div>
 
               <div className="form-group">
-                <label htmlFor="track-type">Track Type:</label>
+                <label htmlFor="track-type">Track Type</label>
                 <select
                   id="track-type"
+                  className="neo-select"
                   value={trackType}
                   onChange={(e) => setTrackType(e.target.value)}
                 >
-                  {TRACK_TYPES.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
+                  {DOWNLOADABLE_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {TrackTypeMeta[type].label}
                     </option>
                   ))}
                 </select>
               </div>
 
               <div className="form-actions">
-                <button type="button" onClick={handleClose}>
+                <button
+                  type="button"
+                  className="neo-btn neo-btn--ghost"
+                  onClick={handleClose}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="primary">
+                <button type="submit" className="neo-btn neo-btn--primary">
                   Process Track
                 </button>
               </div>
@@ -223,7 +217,10 @@ export const AddTrackDialog: React.FC<AddTrackDialogProps> = ({
                 <TrackRow track={completedTrack} onUpdate={onTrackAdded} />
               </div>
               <div className="form-actions">
-                <button onClick={handleClose} className="primary">
+                <button
+                  onClick={handleClose}
+                  className="neo-btn neo-btn--primary"
+                >
                   Close
                 </button>
               </div>

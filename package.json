@@ -15,7 +15,8 @@
     "dl:excerpt": "pnpm --filter tools dl excerpt",
     "dl:sketch": "pnpm --filter tools dl sketch",
     "search:tracks": "pnpm --filter tools search:tracks",
-    "bulk:upload": "pnpm --filter tools bulk:upload"
+    "bulk:upload": "pnpm --filter tools bulk:upload",
+    "test:backoffice": "pnpm --filter @onsemetbien/backoffice test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.738.0",

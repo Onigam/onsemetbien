@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dashboard } from './pages/Dashboard';
 import './App.css';
 
@@ -6,7 +5,8 @@ function App() {
   return (
     <div className="App">
       <header className="app-header">
-        <h1>On se met bien - Back Office</h1>
+        <h1>On se met bien — Back Office</h1>
+        <p className="app-tagline">Track Management Console</p>
       </header>
       <main>
         <Dashboard />

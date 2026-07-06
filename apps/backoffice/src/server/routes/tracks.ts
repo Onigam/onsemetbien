@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { TrackModel, Track, VALID_TRACK_TYPES } from '@onsemetbien/shared';
+import { TrackModel, Track, VALID_TRACK_TYPES, MAX_DURATION } from '@onsemetbien/shared';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { volumeService } from '../services/volumeService';
@@ -81,6 +81,57 @@ router.get('/', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error fetching tracks:', error);
     res.status(500).json({ error: 'Failed to fetch tracks' });
+  }
+});
+
+// GET /api/tracks/stats - Per-type counts (incl. hidden)
+// IMPORTANT: must be declared BEFORE `/:id` so it is not captured as an id.
+router.get('/stats', async (_req: Request, res: Response) => {
+  try {
+    const grouped = await TrackModel.aggregate<{
+      _id: string;
+      total: number;
+      hidden: number;
+      visible: number;
+    }>([
+      {
+        $group: {
+          _id: '$type',
+          total: { $sum: 1 },
+          hidden: {
+            $sum: { $cond: [{ $eq: ['$hidden', true] }, 1, 0] },
+          },
+          visible: {
+            $sum: { $cond: [{ $eq: ['$hidden', true] }, 0, 1] },
+          },
+        },
+      },
+    ]);
+
+    const byType: Record<
+      string,
+      { total: number; visible: number; hidden: number }
+    > = {};
+    for (const type of VALID_TRACK_TYPES) {
+      byType[type] = { total: 0, visible: 0, hidden: 0 };
+    }
+
+    const totals = { total: 0, visible: 0, hidden: 0 };
+    for (const row of grouped) {
+      const entry = { total: row.total, visible: row.visible, hidden: row.hidden };
+      // Always surface known types; ignore any legacy/unknown type buckets.
+      if (row._id in byType) {
+        byType[row._id] = entry;
+      }
+      totals.total += row.total;
+      totals.visible += row.visible;
+      totals.hidden += row.hidden;
+    }
+
+    res.json({ byType, totals });
+  } catch (error) {
+    console.error('Error computing track stats:', error);
+    res.status(500).json({ error: 'Failed to compute track stats' });
   }
 });
 
@@ -320,13 +371,7 @@ router.post('/:id/preview-audio', async (req: Request, res: Response) => {
 });
 
 function getMaxDurationForType(trackType: string): number {
-  const maxDurations: Record<string, number> = {
-    music: 360,
-    excerpt: 160,
-    sketch: 160,
-    jingle: 20,
-  };
-  return maxDurations[trackType] || 360;
+  return (MAX_DURATION as Record<string, number>)[trackType] || 360;
 }
 
 export { router as tracksRouter };

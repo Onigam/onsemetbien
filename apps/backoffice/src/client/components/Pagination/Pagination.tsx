@@ -49,7 +49,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="pagination-button"
+        className="neo-btn neo-btn--sm pagination-button"
       >
         Previous
       </button>
@@ -59,7 +59,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           key={index}
           onClick={() => typeof page === 'number' && onPageChange(page)}
           disabled={page === '...' || page === currentPage}
-          className={`pagination-button ${
+          className={`neo-btn neo-btn--sm pagination-button ${
             page === currentPage ? 'active' : ''
           } ${page === '...' ? 'ellipsis' : ''}`}
         >
@@ -70,7 +70,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="pagination-button"
+        className="neo-btn neo-btn--sm pagination-button"
       >
         Next
       </button>

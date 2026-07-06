@@ -241,9 +241,12 @@ export function getFrequencyLevels(barCount: number): number[] | null {
     // Peak-weighted: an arpeggio note is a short spike in its band that a
     // plain average would drown under a sustained pad — the peak catches it.
     const level = (sum / count) * 0.35 + peak * 0.65; // 0..255
-    const tilt = 1 + 2.2 * (i / (barCount - 1)); // bass 1x → treble ~3.2x
+    // "Smile" curve: boost both the bass and the treble (dip the mids), so the
+    // low end / instrumental stays punchy while vocals & arpeggios still show.
+    const p = i / (barCount - 1); // 0 = bass, 1 = treble
+    const gain = 1 + 1.2 * p + 0.9 * Math.pow(1 - p, 3); // bass ~1.9, treble ~2.2
     // Gamma < 1 lifts mid/low levels so quieter melodic lines stay visible.
-    const val = Math.min(1, Math.pow(level / 255, 0.75) * tilt);
+    const val = Math.min(1, Math.pow(level / 255, 0.75) * gain);
     out[i] = val;
     energy += val;
   }

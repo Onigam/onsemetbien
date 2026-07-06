@@ -151,8 +151,8 @@ function attach(el: HTMLAudioElement): AnalyserNode | null {
   try {
     const source = ctx.createMediaElementSource(el);
     const an = ctx.createAnalyser();
-    an.fftSize = 128; // 64 frequency bins
-    an.smoothingTimeConstant = 0.82;
+    an.fftSize = 1024; // 512 bins — enough resolution for log-spaced bands
+    an.smoothingTimeConstant = 0.7; // a bit snappier so vocals/transients show
     source.connect(an);
     an.connect(ctx.destination);
     sourceNodes.set(el, source);
@@ -177,20 +177,40 @@ export function getFrequencyLevels(barCount: number): number[] | null {
   if (!an || !freqData) return null;
 
   an.getByteFrequencyData(freqData);
-  const usable = Math.floor(freqData.length * 0.8); // ignore the very top bins
-  const size = usable / barCount;
+
+  // FFT bins are LINEAR in frequency, but perception (and musical content) is
+  // logarithmic — a linear split buries vocals/mids/highs under the bass. Map
+  // each bar to a log-spaced band and tilt the gain up with frequency to undo
+  // the natural spectral roll-off, so speech/singing move as much as the beat.
+  const bins = freqData.length; // fftSize / 2
+  const binHz = ctx.sampleRate / (bins * 2); // = sampleRate / fftSize
+  const fMin = 40;
+  const fMax = Math.min(16000, ctx.sampleRate / 2);
+  const ratio = fMax / fMin;
+
   const out: number[] = new Array(barCount);
   let energy = 0;
+  let prevEnd = 0;
   for (let i = 0; i < barCount; i++) {
-    const start = Math.floor(i * size);
-    const end = Math.max(start + 1, Math.floor((i + 1) * size));
+    const fHi = fMin * Math.pow(ratio, (i + 1) / barCount);
+    const end = Math.min(bins, Math.max(prevEnd + 1, Math.round(fHi / binHz)));
+    const start = prevEnd < end ? prevEnd : end - 1;
+    prevEnd = end;
+
+    // Blend average + peak: peak keeps wide high bands lively.
     let sum = 0;
-    for (let j = start; j < end && j < freqData.length; j++) {
-      sum += freqData[j] ?? 0;
+    let peak = 0;
+    for (let j = start; j < end; j++) {
+      const v = freqData[j] ?? 0;
+      sum += v;
+      if (v > peak) peak = v;
     }
-    const avg = sum / (end - start) / 255;
-    energy += avg;
-    out[i] = Math.min(1, Math.pow(avg, 0.85) * 1.25);
+    const count = end - start;
+    const level = (sum / count) * 0.5 + peak * 0.5; // 0..255
+    const tilt = 1 + 1.4 * (i / (barCount - 1)); // bass 1x → treble ~2.4x
+    const val = Math.min(1, Math.pow(level / 255, 0.9) * tilt);
+    out[i] = val;
+    energy += val;
   }
   // Flat-zero means a tainted stream slipped through → let the synth take over.
   return energy > 0.001 ? out : null;

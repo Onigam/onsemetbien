@@ -6,6 +6,7 @@ import { createListenerCount } from './components/ListenerCount';
 import { createSkipVote } from './components/SkipVote';
 import { createEqualizer } from './components/Equalizer';
 import { createAudioPlayer } from './components/AudioPlayer';
+import { createUpcomingTracks } from './components/UpcomingTracks';
 import * as socketService from './services/socket';
 import * as audioService from './services/audio';
 
@@ -16,6 +17,7 @@ const listenerCount = createListenerCount();
 const skipVote = createSkipVote(() => socketService.emitVoteSkip());
 const equalizer = createEqualizer();
 const audioPlayer = createAudioPlayer();
+const upcoming = createUpcomingTracks();
 
 // Build DOM structure
 const app = document.getElementById('app');
@@ -29,6 +31,7 @@ if (app) {
   playerInfo.appendChild(skipVote.element);
   app.appendChild(playerInfo);
 
+  app.appendChild(upcoming.element);
   app.appendChild(equalizer.element);
   app.appendChild(audioPlayer.element);
 }
@@ -45,9 +48,11 @@ socketService.onDisconnect(() => {
 socketService.onTrackChange((track) => {
   console.log('Track changed:', track);
   nowPlaying.update(track.title);
-  audioService.setSource(track.url);
+  audioService.playPreloadedOrSet(track.url);
   skipVote.reset();
 
+  // Late-joiners / reconnects seek to the live position; a fresh switch starts
+  // at 0 (playPreloadedOrSet already reset a gapless swap to 0).
   if (track.currentPosition) {
     audioService.setCurrentTime(track.currentPosition);
   } else {
@@ -57,6 +62,16 @@ socketService.onTrackChange((track) => {
   if (document.body.classList.contains('user-interacted')) {
     audioService.play();
   }
+});
+
+socketService.onPreloadNext(({ url }) => {
+  if (url) {
+    audioService.preload(url);
+  }
+});
+
+socketService.onUpcoming(({ tracks }) => {
+  upcoming.update(tracks);
 });
 
 socketService.onListenersUpdate((count) => {

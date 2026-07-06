@@ -10,7 +10,9 @@
     "build": "tsc && vite build",
     "build:server": "tsc",
     "build:client": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.738.0",
@@ -26,6 +28,7 @@
     "@types/node": "^20.11.24",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vite": "^5.4.19"
+    "vite": "^5.4.19",
+    "vitest": "^2.1.9"
   }
 }

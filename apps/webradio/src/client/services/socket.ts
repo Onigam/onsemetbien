@@ -4,6 +4,8 @@ import type {
   ClientToServerEvents,
   TrackChangeEvent,
   SkipVotesUpdateEvent,
+  PreloadNextEvent,
+  UpcomingEvent,
 } from '../types/events';
 
 type TypedSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -24,6 +26,14 @@ export function onListenersUpdate(callback: (count: number) => void): void {
 
 export function onSkipVotesUpdate(callback: (data: SkipVotesUpdateEvent) => void): void {
   socket.on('skipVotesUpdate', callback);
+}
+
+export function onPreloadNext(callback: (data: PreloadNextEvent) => void): void {
+  socket.on('preloadNext', callback);
+}
+
+export function onUpcoming(callback: (data: UpcomingEvent) => void): void {
+  socket.on('upcoming', callback);
 }
 
 export function onConnect(callback: () => void): void {

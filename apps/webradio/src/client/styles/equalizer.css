@@ -21,9 +21,8 @@
     transition: height 0.07s linear;
 }
 
-/* Real-signal mode gets a touch more color pop. */
 .equalizer.is-live .bar {
-    background-color: var(--neo-primary);
+    background-color: var(--neo-green);
 }
 
 @media (prefers-reduced-motion: reduce) {

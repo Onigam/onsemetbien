@@ -31,9 +31,9 @@ if (app) {
   playerInfo.appendChild(skipVote.element);
   app.appendChild(playerInfo);
 
-  app.appendChild(upcoming.element);
   app.appendChild(equalizer.element);
   app.appendChild(audioPlayer.element);
+  app.appendChild(upcoming.element);
 }
 
 // Wire socket events

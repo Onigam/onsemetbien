@@ -119,6 +119,27 @@ async function probeCors(url: string): Promise<boolean> {
   }
 }
 
+// Re-fetch an element's current src now that crossOrigin is set, so it becomes
+// CORS-loaded (and thus analysable) without losing its position. Only called on
+// a paused element so it never interrupts audible playback.
+function reloadWithCors(el: HTMLAudioElement): void {
+  if (!el.src) return;
+  const pos = el.currentTime;
+  markSrc(el);
+  el.load(); // resource selection re-runs with crossOrigin applied
+  const onReady = () => {
+    el.removeEventListener('loadedmetadata', onReady);
+    if (pos > 0) {
+      try {
+        el.currentTime = pos;
+      } catch {
+        /* seek may be rejected before metadata; harmless */
+      }
+    }
+  };
+  el.addEventListener('loadedmetadata', onReady);
+}
+
 function maybeEnableAnalysis(url: string): void {
   if (corsProbed) return;
   corsProbed = true;
@@ -128,6 +149,13 @@ function maybeEnableAnalysis(url: string): void {
     // Loads from now on are fetched with CORS so the analyser sees real data.
     active.crossOrigin = 'anonymous';
     standby.crossOrigin = 'anonymous';
+    // The first track (and its preloaded successor) were loaded before the
+    // probe resolved, so they aren't CORS-loaded yet. Re-fetch them now so the
+    // real spectrum works from the very first track. Skip the active element if
+    // it's already playing, to avoid interrupting audible playback (rare: user
+    // pressed play before the probe finished — that track keeps the fallback).
+    if (active.paused) reloadWithCors(active);
+    if (standby.src) reloadWithCors(standby);
   });
 }
 

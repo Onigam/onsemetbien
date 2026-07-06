@@ -1,17 +1,7 @@
 import React from 'react';
 import { TrackRow } from './TrackRow';
+import type { Track } from '../../types';
 import './TrackList.css';
-
-interface Track {
-  _id: string;
-  title: string;
-  url: string;
-  duration?: number;
-  createdAt: string;
-  type: string;
-  sourceUrl?: string;
-  hidden?: boolean;
-}
 
 interface TrackListProps {
   tracks: Track[];
@@ -24,14 +14,14 @@ export const TrackList: React.FC<TrackListProps> = ({
 }) => {
   if (tracks.length === 0) {
     return (
-      <div className="track-list-empty">
+      <div className="track-list-empty neo-panel">
         <p>No tracks found.</p>
       </div>
     );
   }
 
   return (
-    <div className="track-list">
+    <div className="track-list neo-panel">
       <div className="track-list-header">
         <div className="track-header-title">Title</div>
         <div className="track-header-type">Type</div>

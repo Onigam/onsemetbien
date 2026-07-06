@@ -1,19 +1,20 @@
 .track-list {
-  border: 1px solid #ddd;
-  border-radius: 8px;
   overflow: hidden;
-  background: white;
+  background: var(--neo-white);
 }
 
 .track-list-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  gap: 1rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-bottom: 1px solid #ddd;
-  font-weight: 600;
-  color: #333;
+  grid-template-columns: 2.4fr 1fr 1fr 1fr 0.8fr;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--neo-black);
+  color: var(--neo-white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .track-list-body {
@@ -22,39 +23,22 @@
 }
 
 .track-list-empty {
-  padding: 3rem;
+  padding: 40px;
   text-align: center;
-  color: #666;
-  font-size: 1.1rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .track-list-empty p {
   margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  .track-list {
-    background: #2a2a2a;
-    border-color: #444;
-  }
-  
-  .track-list-header {
-    background: #333;
-    border-bottom-color: #444;
-    color: #fff;
-  }
-  
-  .track-list-empty {
-    color: #ccc;
-  }
-}
-
 @media (max-width: 768px) {
   .track-list-header {
-    grid-template-columns: 2fr 1fr 1fr;
-    font-size: 0.9rem;
+    grid-template-columns: 2fr 1fr 0.6fr;
   }
-  
+
   .track-header-duration,
   .track-header-status {
     display: none;
@@ -63,10 +47,10 @@
 
 @media (max-width: 480px) {
   .track-list-header {
-    grid-template-columns: 1fr 1fr;
-    padding: 0.75rem;
+    grid-template-columns: 1fr 0.6fr;
+    padding: 12px;
   }
-  
+
   .track-header-type {
     display: none;
   }

@@ -14,7 +14,14 @@
     "noImplicitAny": false
   },
   "include": ["src/server/**/*"],
-  "exclude": ["node_modules", "dist", "src/client"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/client",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/test"
+  ],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TrackList } from '../components/TrackList/TrackList';
 import { SearchFilter } from '../components/Search/SearchFilter';
 import { Pagination } from '../components/Pagination/Pagination';
 import { AddTrackDialog } from '../components/AddTrackDialog/AddTrackDialog';
+import { StatsBar } from '../components/StatsBar/StatsBar';
 import { useTrackList } from '../hooks/useTrackList';
+import { useTrackStats } from '../hooks/useTrackStats';
 import './Dashboard.css';
 
 export const Dashboard: React.FC = () => {
@@ -20,31 +22,60 @@ export const Dashboard: React.FC = () => {
     type,
   });
 
-  const handleSearch = (searchTerm: string, trackType: string) => {
+  const { stats, loading: statsLoading, refetch: refetchStats } = useTrackStats();
+
+  // Re-fetch both the list and the stats after any mutation.
+  const handleTrackUpdate = useCallback(() => {
+    refetch();
+    refetchStats();
+  }, [refetch, refetchStats]);
+
+  const handleSearch = (searchTerm: string) => {
     setSearch(searchTerm);
-    setType(trackType);
-    setPage(1); // Reset to first page when searching
+    setPage(1);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+  const handleSelectType = (nextType: string) => {
+    setType(nextType);
+    setPage(1);
   };
+
+  const handleReset = () => {
+    setSearch('');
+    setType('');
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => setPage(newPage);
 
   const handleLimitChange = (newLimit: number) => {
     setLimit(newLimit);
-    setPage(1); // Reset to first page when changing limit
+    setPage(1);
   };
 
   return (
     <div className="dashboard">
-      <div className="dashboard-header">
+      <StatsBar
+        stats={stats}
+        loading={statsLoading}
+        activeType={type}
+        onSelectType={handleSelectType}
+      />
+
+      <div className="dashboard-header neo-panel">
         <h2>Track Management</h2>
         <div className="dashboard-controls">
-          <SearchFilter onSearch={handleSearch} />
+          <SearchFilter
+            type={type}
+            onSearch={handleSearch}
+            onTypeChange={handleSelectType}
+            onReset={handleReset}
+          />
           <div className="limit-selector">
-            <label htmlFor="limit">Items per page:</label>
+            <label htmlFor="limit">Per page</label>
             <select
               id="limit"
+              className="neo-select"
               value={limit}
               onChange={(e) => handleLimitChange(Number(e.target.value))}
             >
@@ -54,7 +85,7 @@ export const Dashboard: React.FC = () => {
             </select>
           </div>
           <button
-            className="add-track-button"
+            className="neo-btn neo-btn--primary add-track-button"
             onClick={() => setIsAddDialogOpen(true)}
           >
             + Add New Track
@@ -63,14 +94,16 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {error && (
-        <div className="error-message">Error loading tracks: {error}</div>
+        <div className="neo-message neo-message--error dashboard-error">
+          Error loading tracks: {error}
+        </div>
       )}
 
       {loading ? (
-        <div className="loading">Loading tracks...</div>
+        <div className="dashboard-loading neo-panel">Loading tracks…</div>
       ) : (
         <>
-          <TrackList tracks={tracks} onTrackUpdate={refetch} />
+          <TrackList tracks={tracks} onTrackUpdate={handleTrackUpdate} />
           {pagination && (
             <Pagination
               currentPage={pagination.page}
@@ -84,7 +117,7 @@ export const Dashboard: React.FC = () => {
       <AddTrackDialog
         isOpen={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
-        onTrackAdded={refetch}
+        onTrackAdded={handleTrackUpdate}
       />
     </div>
   );

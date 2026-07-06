@@ -1,21 +1,25 @@
 .track-row {
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.2s;
+  border-bottom: 3px solid var(--neo-black);
+  transition: background-color 0.15s;
+}
+
+.track-row:last-child {
+  border-bottom: none;
 }
 
 .track-row:hover {
-  background-color: #f8f9fa;
+  background-color: #fff8e6;
 }
 
 .track-row.expanded {
-  background-color: #f0f8ff;
+  background-color: #eefcff;
 }
 
 .track-row-main {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  gap: 1rem;
-  padding: 1rem;
+  grid-template-columns: 2.4fr 1fr 1fr 1fr 0.8fr;
+  gap: 16px;
+  padding: 14px 18px;
   cursor: pointer;
   align-items: center;
 }
@@ -28,117 +32,138 @@
 .track-title {
   flex-direction: column;
   align-items: flex-start;
+  min-width: 0;
+}
+
+.track-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
 .track-title-text {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 0.25rem;
+  font-weight: 700;
+  color: var(--neo-black);
   word-break: break-word;
 }
 
+.track-title-edit-btn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 0.85rem;
+  background: var(--neo-accent);
+  color: var(--neo-black);
+  border: 2px solid var(--neo-black);
+  box-shadow: 2px 2px 0 var(--neo-black);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  opacity: 0;
+}
+
+.track-row:hover .track-title-edit-btn {
+  opacity: 1;
+}
+
+.track-title-edit-btn:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--neo-black);
+}
+
 .track-date {
-  font-size: 0.8rem;
-  color: #666;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--neo-black);
+  opacity: 0.55;
+  margin-top: 4px;
+}
+
+.track-title-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.track-title-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 6px 10px;
+}
+
+.track-title-error {
+  width: 100%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--neo-primary);
 }
 
 .track-type-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 500;
   text-transform: capitalize;
 }
 
-.status-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
 .status-badge.visible {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--neo-green);
+  color: var(--neo-black);
 }
 
 .status-badge.hidden {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #e0e0e0;
+  color: var(--neo-black);
 }
 
 .expand-button {
-  background: none;
-  border: none;
-  font-size: 1rem;
+  background: var(--neo-white);
+  border: 3px solid var(--neo-black);
+  box-shadow: 2px 2px 0 var(--neo-black);
+  font-size: 0.85rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
 }
 
 .expand-button:hover {
-  background-color: #e9ecef;
-}
-
-@media (prefers-color-scheme: dark) {
-  .track-row {
-    border-bottom-color: #444;
-  }
-  
-  .track-row:hover {
-    background-color: #333;
-  }
-  
-  .track-row.expanded {
-    background-color: #2a3a4a;
-  }
-  
-  .track-title-text {
-    color: #fff;
-  }
-  
-  .track-date {
-    color: #ccc;
-  }
-  
-  .status-badge.visible {
-    background-color: #1e4d2b;
-    color: #a3d9a5;
-  }
-  
-  .status-badge.hidden {
-    background-color: #4d1e24;
-    color: #f5a3a9;
-  }
-  
-  .expand-button:hover {
-    background-color: #444;
-  }
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--neo-black);
+  background: var(--neo-secondary);
 }
 
 @media (max-width: 768px) {
   .track-row-main {
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 0.6fr;
   }
-  
+
   .track-cell.track-duration,
   .track-cell.track-status {
     display: none;
+  }
+
+  /* Always show edit affordance on touch layouts. */
+  .track-title-edit-btn {
+    opacity: 1;
   }
 }
 
 @media (max-width: 480px) {
   .track-row-main {
-    grid-template-columns: 1fr 1fr;
-    padding: 0.75rem;
+    grid-template-columns: 1fr 0.6fr;
+    padding: 12px;
   }
-  
+
   .track-cell.track-type {
     display: none;
   }
-  
+
   .track-title-text {
     font-size: 0.9rem;
   }

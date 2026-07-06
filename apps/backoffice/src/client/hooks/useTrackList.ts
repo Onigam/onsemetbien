@@ -1,23 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
-
-interface Track {
-  _id: string;
-  title: string;
-  url: string;
-  duration?: number;
-  createdAt: string;
-  type: string;
-  sourceUrl?: string;
-  hidden?: boolean;
-}
-
-interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  pages: number;
-}
+import type { Track, Pagination } from '../types';
 
 interface UseTrackListParams {
   page: number;

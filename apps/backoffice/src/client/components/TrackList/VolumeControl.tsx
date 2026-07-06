@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
+import type { Track } from '../../types';
 import './VolumeControl.css';
-
-interface Track {
-  _id: string;
-  title: string;
-  url: string;
-  duration?: number;
-  createdAt: string;
-  type: string;
-  sourceUrl?: string;
-  hidden?: boolean;
-}
 
 interface TrackMetadata {
   duration: number;
@@ -86,9 +76,15 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
     <div className="volume-control">
       <h4>Volume Control</h4>
 
-      {isLoading && <div className="loading">Loading metadata...</div>}
+      {isLoading && (
+        <div className="neo-message neo-message--info loading">
+          Loading metadata…
+        </div>
+      )}
 
-      {error && <div className="error">{error}</div>}
+      {error && (
+        <div className="neo-message neo-message--error error">{error}</div>
+      )}
 
       {metadata && (
         <div className="metadata-info">
@@ -148,7 +144,7 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
         <button
           onClick={handleAdjustVolume}
           disabled={isAdjusting || volume === 1.0}
-          className="adjust-button"
+          className="neo-btn neo-btn--primary adjust-button"
         >
           {isAdjusting ? 'Adjusting...' : 'Apply Volume Change'}
         </button>

@@ -1,24 +1,28 @@
 .dashboard {
-  padding: 1rem;
+  padding: 0;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
   flex-wrap: wrap;
-  gap: 1rem;
 }
 
 .dashboard-header h2 {
   margin: 0;
-  color: #333;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  color: var(--neo-black);
 }
 
 .dashboard-controls {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -26,84 +30,53 @@
 .limit-selector {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .limit-selector label {
-  font-size: 0.9rem;
-  color: #666;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--neo-black);
 }
 
-.limit-selector select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: white;
+.dashboard-error {
+  margin-bottom: 20px;
 }
 
-.add-track-button {
-  padding: 0.75rem 1.5rem;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.add-track-button:hover {
-  background: #218838;
-}
-
-.add-track-button:active {
-  background: #1e7e34;
-}
-
-.error-message {
-  background: #fee;
-  color: #c33;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  border: 1px solid #fcc;
-}
-
-.loading {
+.dashboard-loading {
+  padding: 40px;
   text-align: center;
-  padding: 2rem;
-  color: #666;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
   font-size: 1.1rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .dashboard-header h2 {
-    color: #fff;
-  }
-  
-  .limit-selector label {
-    color: #ccc;
-  }
-  
-  .limit-selector select {
-    background: #333;
-    color: #fff;
-    border-color: #555;
-  }
-  
-  .loading {
-    color: #ccc;
-  }
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 @media (max-width: 768px) {
   .dashboard-header {
     flex-direction: column;
     align-items: stretch;
+    padding: 16px;
   }
-  
+
+  .dashboard-header h2 {
+    font-size: 1.4rem;
+  }
+
   .dashboard-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .limit-selector {
     justify-content: space-between;
+  }
+
+  .add-track-button {
+    width: 100%;
   }
 }

@@ -1,25 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../../services/api';
+import { getMaxDuration } from '../../constants/trackTypes';
+import type { Track } from '../../types';
 import './TrackEditor.css';
-
-interface Track {
-  _id: string;
-  title: string;
-  duration?: number;
-  type: string;
-}
 
 interface TrackEditorProps {
   track: Track;
   onUpdate: () => void;
 }
-
-const MAX_DURATIONS: Record<string, number> = {
-  music: 360,
-  excerpt: 90,
-  sketch: 90,
-  jingle: 20,
-};
 
 export const TrackEditor: React.FC<TrackEditorProps> = ({ track, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -31,7 +19,7 @@ export const TrackEditor: React.FC<TrackEditorProps> = ({ track, onUpdate }) => 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const maxDuration = MAX_DURATIONS[track.type] || 360;
+  const maxDuration = getMaxDuration(track.type);
 
   useEffect(() => {
     const maxTrimDuration = track.duration || 0;

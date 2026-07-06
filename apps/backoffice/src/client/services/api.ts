@@ -1,4 +1,6 @@
 import axios from 'axios';
+import type { Track, Pagination } from '../types';
+import type { TrackType } from '../constants/trackTypes';
 
 const apiClient = axios.create({
   baseURL: '/api',
@@ -7,22 +9,15 @@ const apiClient = axios.create({
   },
 });
 
-interface Track {
-  _id: string;
-  title: string;
-  url: string;
-  duration?: number;
-  createdAt: string;
-  type: string;
-  sourceUrl?: string;
-  hidden?: boolean;
+export interface TypeCount {
+  total: number;
+  visible: number;
+  hidden: number;
 }
 
-interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  pages: number;
+export interface TrackStats {
+  byType: Record<TrackType, TypeCount>;
+  totals: TypeCount;
 }
 
 interface GetTracksResponse {
@@ -49,6 +44,11 @@ interface TrackMetadata {
 export const api = {
   async getTracks(params: GetTracksParams): Promise<GetTracksResponse> {
     const response = await apiClient.get('/tracks', { params });
+    return response.data;
+  },
+
+  async getStats(): Promise<TrackStats> {
+    const response = await apiClient.get('/tracks/stats');
     return response.data;
   },
 

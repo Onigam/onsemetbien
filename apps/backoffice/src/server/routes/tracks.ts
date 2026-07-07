@@ -19,23 +19,36 @@ const s3Client = new S3Client({
   forcePathStyle: true,
 });
 
-async function getSignedS3Url(key: string) {
-  console.log('Getting signed URL for:', key);
-
+async function getSignedS3Url(key: string, downloadName?: string) {
   // Remove any full URL if it exists, we just want the filename
   const filename = key.split('/').pop() || key;
-
-  console.log('Getting signed URL for:', filename);
 
   const command = new GetObjectCommand({
     Bucket: process.env.OVH_BUCKET,
     Key: filename,
+    // When a download name is provided, force the browser to download the file
+    // (instead of streaming it inline) with a friendly filename.
+    ...(downloadName
+      ? { ResponseContentDisposition: contentDisposition(downloadName) }
+      : {}),
   });
 
   // URL expires in 1 hour
-  const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-  console.log('Signed URL:', url);
-  return url;
+  return getSignedUrl(s3Client, command, { expiresIn: 3600 });
+}
+
+// Build a Content-Disposition value with an ASCII fallback + UTF-8 filename*,
+// so accented/special titles download with a correct, safe filename.
+function contentDisposition(name: string): string {
+  const ascii =
+    name
+      .normalize('NFKD')
+      .replace(/[^\x20-\x7E]/g, '') // drop non-ASCII
+      .replace(/["\\]/g, '') // drop quotes/backslashes
+      .replace(/[\r\n]/g, '')
+      .trim() || 'track.mp3';
+  const utf8 = encodeURIComponent(name);
+  return `attachment; filename="${ascii}"; filename*=UTF-8''${utf8}`;
 }
 
 const router = express.Router();
@@ -250,6 +263,25 @@ router.get('/:id/audio', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error getting audio URL:', error);
     res.status(500).json({ error: 'Failed to get audio URL' });
+  }
+});
+
+// GET /api/tracks/:id/download - Download the MP3 (forces attachment + title filename)
+router.get('/:id/download', async (req: Request, res: Response) => {
+  try {
+    const track = await TrackModel.findById(req.params.id);
+    if (!track) {
+      return res.status(404).json({ error: 'Track not found' });
+    }
+
+    const safeTitle = (track.title || 'track').replace(/[/\\]/g, '-').trim();
+    const signedUrl = await getSignedS3Url(track.url, `${safeTitle}.mp3`);
+    // Redirect straight to the presigned URL so a plain link triggers the
+    // download with the right filename, without proxying the file.
+    res.redirect(signedUrl);
+  } catch (error) {
+    console.error('Error building download URL:', error);
+    res.status(500).json({ error: 'Failed to build download URL' });
   }
 });
 

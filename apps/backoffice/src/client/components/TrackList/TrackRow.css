@@ -118,7 +118,13 @@
   color: var(--neo-black);
 }
 
-.expand-button {
+.track-actions {
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.expand-button,
+.download-button {
   background: var(--neo-white);
   border: 3px solid var(--neo-black);
   box-shadow: 2px 2px 0 var(--neo-black);
@@ -130,12 +136,25 @@
   align-items: center;
   justify-content: center;
   transition: all 0.1s ease;
+  flex-shrink: 0;
+}
+
+/* <a> reset so the download button matches the neo buttons. */
+.download-button {
+  color: var(--neo-black);
+  text-decoration: none;
 }
 
 .expand-button:hover {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--neo-black);
   background: var(--neo-secondary);
+}
+
+.download-button:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--neo-black);
+  background: var(--neo-green);
 }
 
 @media (max-width: 768px) {

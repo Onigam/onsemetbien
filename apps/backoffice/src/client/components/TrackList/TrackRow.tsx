@@ -130,6 +130,16 @@ export const TrackRow: React.FC<TrackRowProps> = ({ track, onUpdate }) => {
           </span>
         </div>
         <div className="track-cell track-actions">
+          <a
+            className="download-button"
+            href={`/api/tracks/${track._id}/download`}
+            title="Download MP3"
+            aria-label="Download MP3"
+            download
+            onClick={(e) => e.stopPropagation()}
+          >
+            ⬇
+          </a>
           <button
             className="expand-button"
             aria-label={isExpanded ? 'Collapse' : 'Expand'}

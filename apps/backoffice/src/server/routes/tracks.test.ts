@@ -8,6 +8,8 @@ import request from 'supertest';
 const mocks = vi.hoisted(() => ({
   aggregate: vi.fn(),
   findByIdAndUpdate: vi.fn(),
+  findById: vi.fn(),
+  getSignedUrl: vi.fn(),
 }));
 
 // Stub the shared package: only what the router imports. No mongoose, no DB.
@@ -16,11 +18,16 @@ vi.mock('@onsemetbien/shared', () => ({
     aggregate: mocks.aggregate,
     findByIdAndUpdate: mocks.findByIdAndUpdate,
     find: vi.fn(),
-    findById: vi.fn(),
+    findById: mocks.findById,
     countDocuments: vi.fn(),
   },
   VALID_TRACK_TYPES: ['music', 'excerpt', 'sketch', 'jingle'],
   MAX_DURATION: { music: 360, excerpt: 160, sketch: 160, jingle: 20 },
+}));
+
+// Stub the presigner so no AWS signing / network happens; capture the command.
+vi.mock('@aws-sdk/s3-request-presigner', () => ({
+  getSignedUrl: mocks.getSignedUrl,
 }));
 
 // The router pulls these services in at import time; stub them so no ffmpeg /
@@ -147,6 +154,45 @@ describe('PUT /api/tracks/:id/title', () => {
     const res = await request(makeApp())
       .put('/api/tracks/missing/title')
       .send({ title: 'Whatever' });
+
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ error: 'Track not found' });
+  });
+});
+
+describe('GET /api/tracks/:id/download', () => {
+  beforeEach(() => {
+    mocks.findById.mockReset();
+    mocks.getSignedUrl.mockReset();
+  });
+
+  it('redirects to a presigned URL that forces an attachment with the title filename', async () => {
+    mocks.findById.mockResolvedValueOnce({
+      _id: 'abc',
+      title: 'Café Crème',
+      url: 'uuid-1234.mp3',
+    });
+    let capturedInput: { Key?: string; ResponseContentDisposition?: string } = {};
+    mocks.getSignedUrl.mockImplementationOnce(async (_client, command) => {
+      capturedInput = command.input;
+      return 'https://signed.example/uuid-1234.mp3?sig=x';
+    });
+
+    const res = await request(makeApp()).get('/api/tracks/abc/download');
+
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe('https://signed.example/uuid-1234.mp3?sig=x');
+    const cd = capturedInput.ResponseContentDisposition ?? '';
+    expect(cd).toContain('attachment');
+    // ASCII fallback strips accents; UTF-8 filename* preserves the original.
+    expect(cd).toContain('filename="Cafe Creme.mp3"');
+    expect(cd).toContain("filename*=UTF-8''Caf%C3%A9%20Cr%C3%A8me.mp3");
+  });
+
+  it('returns 404 when the track does not exist', async () => {
+    mocks.findById.mockResolvedValueOnce(null);
+
+    const res = await request(makeApp()).get('/api/tracks/missing/download');
 
     expect(res.status).toBe(404);
     expect(res.body).toEqual({ error: 'Track not found' });
